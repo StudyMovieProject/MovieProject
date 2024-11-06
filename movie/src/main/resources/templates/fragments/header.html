@@ -4,11 +4,11 @@
     <title th:text="${title}">영화예매 프로젝트</title>
     <meta charset="UTF-8">
     <meta name="description" content="Movie Reserve Project"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
     <style>
         .nav-item.dropdown:hover .dropdown-menu {
@@ -22,7 +22,7 @@
         <header class="bg-dark text-white p-3">
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <a class="navbar-brand" href="#" th:href="@{/}">
-                    <img th:src="/images/logo.png" alt="Movie Logo" style="height:40px; filter: brightness(0) invert(1);">
+                    <img th:src="@{/images/logo.png}" alt="Movie Logo" style="height:40px; filter: brightness(0) invert(1);">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -69,7 +69,7 @@
                     <div class="navbar-nav">
                         <a class="nav-link btn btn-primary text-white" th:href="@{/reserve}">간편예매</a>
                         <span class="text-white mx-3">|</span>
-                        <a class="nav-link" th:href="@{#}">로그인</a>
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</a>
                         <span class="text-white mx-3">|</span>
                         <a class="nav-link" th:href="@{#}">회원가입</a>
                     </div>
@@ -77,6 +77,6 @@
             </nav>
         </header>
     </div>
-
+    <div th:insert="~{member/login/memberLogin}"></div>
 </body>
 </html>
