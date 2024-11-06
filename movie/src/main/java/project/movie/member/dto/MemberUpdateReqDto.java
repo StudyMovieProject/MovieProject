@@ -37,7 +37,6 @@ public class MemberUpdateReqDto {
     // @Pattern(regexp = "^(ADMIN|CUSTOMER)$")
     private MemberRole role; // ADMIN, CUSTOMER
     private MemberStatus status; // 활동 여부
-    private String certificationCode; // 인증 코드
 
     @Builder
     public MemberUpdateReqDto(Member member) {
