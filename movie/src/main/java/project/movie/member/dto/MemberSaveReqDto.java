@@ -40,7 +40,6 @@ public class MemberSaveReqDto {
     @Pattern(regexp = "^(ADMIN|CUSTOMER)$")
     private String role; // ADMIN, CUSTOMER
     private MemberStatus status; // 활동 여부
-    private String certificationCode; // 인증 코드
 
     @Builder
     public MemberSaveReqDto(Member member) {

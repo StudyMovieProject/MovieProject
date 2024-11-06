@@ -154,7 +154,6 @@ class MemberControllerTest extends DummyObject {
         memberUpdateReqDto.setFullname("홍길동");
         memberUpdateReqDto.setRole(MemberRole.CUSTOMER); // 또는 MemberGrade.ADMIN
         memberUpdateReqDto.setStatus(MemberStatus.ACTIVE); // 필요에 따라 설정
-        memberUpdateReqDto.setCertificationCode("certification-code-123");
 
         // when
         // then
