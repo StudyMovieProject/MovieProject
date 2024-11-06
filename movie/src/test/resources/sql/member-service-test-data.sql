@@ -1,0 +1,1 @@
+INSERT INTO members (member_id, password, username, email, tel, zipcode, address, detail_address, fullname, role, status) VALUES ('net1506', '1234', 'jongwook', 'net1506@naver.com', '010-1234-5678', '12345', 'Seoul', '78-7', 'leejongwook', 'CUSTOMER', 'PENDING');
