@@ -9,7 +9,7 @@ import project.movie.member.domain.Member;
 import project.movie.member.dto.MemberRespDto;
 import project.movie.member.dto.MemberSaveReqDto;
 import project.movie.member.dto.MemberUpdateReqDto;
-import project.movie.member.repository.MemberJpaRepository;
+import project.movie.member.repository.MemberRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberJpaRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -69,12 +69,14 @@ public class MemberService {
     }
 
     @Transactional
-    public void delete(String memberId) {
+    public void delete(String memberId, String password) {
         Member findMember = getByMemberId(memberId);
+        boolean isValid = findMember.validatePassword(password, bCryptPasswordEncoder);
+        if (!isValid) throw new CustomApiException("비밀번호가 일치하지 않습니다.");
         memberRepository.delete(findMember);
     }
 
-    public List<Member> getAllMembers() {
+    public List<Member> list() {
         return memberRepository.findAll();
     }
 }

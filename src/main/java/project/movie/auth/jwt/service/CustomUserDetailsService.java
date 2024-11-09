@@ -7,16 +7,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.movie.auth.jwt.dto.CustomUserDetails;
 import project.movie.member.domain.Member;
-import project.movie.member.repository.MemberJpaRepository;
+import project.movie.member.repository.MemberRepository;
 
 import java.util.Optional;
 
 @Service
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
-    private final MemberJpaRepository userRepository;
+    private final MemberRepository userRepository;
 
-    public CustomUserDetailsService(MemberJpaRepository userRepository) {
+    public CustomUserDetailsService(MemberRepository userRepository) {
         this.userRepository = userRepository;
     }
 
