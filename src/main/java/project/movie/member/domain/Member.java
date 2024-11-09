@@ -77,4 +77,9 @@ public class Member extends Base {
         this.role = dto.getRole();
         this.status = dto.getStatus(); // 상황에 따라 필요한 경우 ENUM 변환
     }
+
+    public boolean validatePassword(String inputPassword, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        // 입력된 평문 패스워드와 이미 암호화된 패스워드를 비교
+        return bCryptPasswordEncoder.matches(inputPassword, this.password);
+    }
 }
