@@ -5,6 +5,6 @@ import project.movie.member.domain.Member;
 
 import java.util.Optional;
 
-public interface MemberJpaRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMemberId(String memberId);
 }

@@ -20,7 +20,7 @@ import project.movie.member.domain.MemberRole;
 import project.movie.member.domain.MemberStatus;
 import project.movie.member.dto.MemberSaveReqDto;
 import project.movie.member.dto.MemberUpdateReqDto;
-import project.movie.member.repository.MemberJpaRepository;
+import project.movie.member.repository.MemberRepository;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,7 +39,7 @@ class MemberControllerTest extends DummyObject {
     @Autowired
     private ObjectMapper om;
     @Autowired
-    private MemberJpaRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
     EntityManager em;
     @Autowired
