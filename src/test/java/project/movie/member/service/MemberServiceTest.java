@@ -122,7 +122,7 @@ class MemberServiceTest extends DummyObject {
         // when
         Member byMemberId = memberService.getByMemberId(memberId);
         System.out.println("삭제 전 확인차 출력 :" + byMemberId);
-        memberService.delete(memberId);
+        memberService.delete(memberId, "1234");
 
         // then
         Assertions.assertThrows(CustomApiException.class, () -> memberService.getByMemberId(memberId));
@@ -136,7 +136,7 @@ class MemberServiceTest extends DummyObject {
 
         // when
         // then
-        CustomApiException customApiException = assertThrows(CustomApiException.class, () -> memberService.delete(memberId));
+        CustomApiException customApiException = assertThrows(CustomApiException.class, () -> memberService.delete(memberId, "1234"));
         assertThat(customApiException.getMessage()).isEqualTo("net1507 는 존재하지 않는 사용자 입니다");
     }
 
