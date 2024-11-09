@@ -2,6 +2,7 @@ package project.movie.board.dto;
 
 import lombok.*;
 import project.movie.board.domain.Board;
+import project.movie.member.domain.Member;
 
 import java.time.LocalDateTime;
 

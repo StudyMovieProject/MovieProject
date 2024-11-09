@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import project.movie.board.dto.BoardReqDto;
 import project.movie.board.dto.BoardRespDto;
 import project.movie.board.service.BoardService;
 import project.movie.common.controller.response.ResponseDto;
+import project.movie.common.handler.exception.CustomApiException;
 import project.movie.member.domain.Member;
 import project.movie.member.dto.MemberRespDto;
 import project.movie.member.service.MemberService;
@@ -45,13 +48,31 @@ public class BoardController {
         return new ResponseEntity<>(new ResponseDto<>(1, "선택한 게시물 조회 성공",  boardService.getList(id)), HttpStatus.OK);
     }
 
+    //본인이 작성한 게시물 조회
+    @RequestMapping(value = "/lists/myList", method = RequestMethod.GET)
+    public ResponseEntity<?> getMyList(@AuthenticationPrincipal UserDetails userDetails) {
+        if(userDetails==null){
+            throw new CustomApiException("로그인 후 확인하세요");
+        }
+        //Member member = memberService.getByMemberId(userDetails.getUsername());
+        //BoardRespDto boardRespDto = boardService.getMyList(userDetails.getUsername());
+        return new ResponseEntity<>(new ResponseDto<>(1, "나의 게시물 조회 성공",  boardService.getMyList(userDetails.getUsername())), HttpStatus.OK);
+
+    }
+
     // 게시물 작성
     @RequestMapping(value = "/write", method = RequestMethod.POST)
-    public ResponseEntity<?> writeList(@RequestBody BoardReqDto requestsDto, BindingResult bindingResult) {
+    public ResponseEntity<?> writeList(@RequestBody BoardReqDto requestsDto,@AuthenticationPrincipal UserDetails userDetails) {
+        if(userDetails==null){
+            throw new CustomApiException("로그인 후 작성하세요");
+        }
+        String member = userDetails.getUsername();
+        requestsDto.setUserid(member);
         BoardRespDto boardRespDto = boardService.writeList(requestsDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시물 작성 성공", boardRespDto), HttpStatus.OK);
 
     }
+
 
     //선택 게시물 수정
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)

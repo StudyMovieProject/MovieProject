@@ -8,9 +8,11 @@ import project.movie.board.dto.BoardDto;
 import project.movie.board.dto.BoardReqDto;
 import project.movie.board.dto.BoardRespDto;
 import project.movie.board.repository.BoardJpaRepository;
+import project.movie.member.domain.Member;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +34,15 @@ public class BoardService {
                 () -> new IllegalArgumentException("선택한 게시물이 존재하지 않습니다.")
         );
     }
+    //내가 작성한 게시물 조회
+    @Transactional
+    public List<BoardDto> getMyList(String userid) {
+        List<Board> boards = boardRepository.findByUserid(userid);
+        List<BoardDto> boardDtos = new ArrayList<>();
+        boards.forEach(s -> boardDtos.add(BoardDto.toDto(s)));
+            return boardDtos;
+    }
+
     // 게시물 작성
     @Transactional
     public BoardRespDto writeList(BoardReqDto requestsDto) {
