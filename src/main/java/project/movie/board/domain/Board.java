@@ -1,15 +1,14 @@
 package project.movie.board.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import project.movie.board.dto.BoardReqDto;
 import project.movie.common.domain.Base;
+import project.movie.member.domain.Member;
 
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -29,7 +28,7 @@ public class Board extends Base {
     @Column(name="content")
     private String content;
 
-    @Column(nullable = false)
+    @Column(name="userid")
     private String userid;
 
     @Column(name="theater")
@@ -39,6 +38,7 @@ public class Board extends Base {
     private int cate;
 
     public Board(BoardReqDto requestsDto) {
+        this.seq = requestsDto.getSeq();
         this.title = requestsDto.getTitle();
         this.content = requestsDto.getContent();
         this.userid = requestsDto.getUserid();
@@ -48,6 +48,7 @@ public class Board extends Base {
 
     //업데이트
     public void update(BoardReqDto requestsDto) {
+        this.seq = requestsDto.getSeq();
         this.title = requestsDto.getTitle();
         this.content = requestsDto.getContent();
         this.userid = requestsDto.getUserid();

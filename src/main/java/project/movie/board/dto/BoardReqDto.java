@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import project.movie.member.domain.Member;
 
 @Getter
 @Setter
@@ -17,4 +18,6 @@ public class BoardReqDto {
     private String content;
     private String theater;
     private int cate;
+
+
 }

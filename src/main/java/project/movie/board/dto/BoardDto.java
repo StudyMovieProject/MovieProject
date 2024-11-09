@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.movie.board.domain.Board;
-import project.movie.member.domain.Member;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +24,8 @@ public class BoardDto {
                 board.getTitle(),
                 board.getContent(),
                 board.getTheater(),
-
                 board.getCate());
     }
+
+
 }
