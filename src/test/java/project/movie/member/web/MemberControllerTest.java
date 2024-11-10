@@ -144,7 +144,7 @@ class MemberControllerTest extends DummyObject {
         String memberId = "net1506";
         MemberUpdateReqDto memberUpdateReqDto = new MemberUpdateReqDto();
         memberUpdateReqDto.setMemberId(memberId);
-        memberUpdateReqDto.setPassword("newPassword123");
+        // memberUpdateReqDto.setPassword("newPassword123");
         memberUpdateReqDto.setUsername("홍길동");
         memberUpdateReqDto.setEmail("honggildong@example.com");
         memberUpdateReqDto.setTel("01012345678");
@@ -152,7 +152,7 @@ class MemberControllerTest extends DummyObject {
         memberUpdateReqDto.setAddress("서울");
         memberUpdateReqDto.setDetailAddress("78-7");
         memberUpdateReqDto.setFullname("홍길동");
-        memberUpdateReqDto.setRole(MemberRole.CUSTOMER); // 또는 MemberGrade.ADMIN
+        memberUpdateReqDto.setRole(MemberRole.CUSTOMER.toString()); // 또는 MemberGrade.GUEST
         memberUpdateReqDto.setStatus(MemberStatus.ACTIVE); // 필요에 따라 설정
 
         // when

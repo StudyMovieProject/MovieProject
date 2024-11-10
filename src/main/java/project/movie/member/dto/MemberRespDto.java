@@ -21,7 +21,7 @@ public class MemberRespDto {
     private String address;
     private String detailAddress;
     private String fullname;
-    private MemberRole role; // ADMIN, CUSTOMER
+    private MemberRole role; // GUEST, CUSTOMER
     private MemberStatus status; // 활동 여부
 
     public MemberRespDto(String memberId, String username, String email, String tel, String zipcode, String address, String detailAddress, String fullname, MemberRole role, MemberStatus status) {

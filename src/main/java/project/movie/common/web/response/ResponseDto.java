@@ -1,4 +1,4 @@
-package project.movie.common.controller.response;
+package project.movie.common.web.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

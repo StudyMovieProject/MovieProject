@@ -8,10 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import project.movie.common.controller.response.ResponseDto;
+import project.movie.common.web.response.ResponseDto;
 import project.movie.member.domain.Member;
 import project.movie.member.dto.MemberRespDto;
 import project.movie.member.dto.MemberUpdateReqDto;
+import project.movie.member.dto.PasswordChangeReqDto;
 import project.movie.member.service.MemberService;
 
 @RestController
@@ -36,8 +37,15 @@ public class MyInfoController {
         return new ResponseEntity<>(new ResponseDto<>(1, "회원정보 수정 성공", userRespDto), HttpStatus.OK);
     }
 
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordChangeReqDto passwordChangeReqDto, @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("MyInfoController changePassword 메서드 실행 : {}", passwordChangeReqDto.toString());
+         memberService.changePassword(userDetails.getUsername(), passwordChangeReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "비밀번호 변경 성공", null), HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("password") String password) {
+    public ResponseEntity<?> delete(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String password) {
         log.info("MyInfoController join 메서드 실행");
         memberService.delete(userDetails.getUsername(), password);
         return new ResponseEntity<>(new ResponseDto<>(1, "회원 삭제 성공", null), HttpStatus.OK);

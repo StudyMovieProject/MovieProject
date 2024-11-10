@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.movie.common.domain.Base;
 import project.movie.member.dto.MemberUpdateReqDto;
+import project.movie.member.dto.PasswordChangeReqDto;
 
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -39,7 +40,7 @@ public class Member extends Base {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private MemberRole role; // ADMIN, CUSTOMER
+    private MemberRole role; // GUEST, CUSTOMER
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -65,8 +66,8 @@ public class Member extends Base {
     }
 
     // 전체 업데이트 메서드
-    public void update(MemberUpdateReqDto dto, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.password = bCryptPasswordEncoder.encode(dto.getPassword()); // 비밀번호 변경 시 암호화 필요
+    public void update(MemberUpdateReqDto dto) {
+        // this.password = bCryptPasswordEncoder.encode(dto.getPassword()); // 비밀번호 변경 시 암호화 필요
         this.username = dto.getUsername();
         this.email = dto.getEmail();
         this.tel = dto.getTel();
@@ -74,8 +75,12 @@ public class Member extends Base {
         this.address = dto.getAddress();
         this.detailAddress = dto.getDetailAddress();
         this.fullname = dto.getFullname();
-        this.role = dto.getRole();
+        this.role = MemberRole.valueOf(dto.getRole());
         this.status = dto.getStatus(); // 상황에 따라 필요한 경우 ENUM 변환
+    }
+
+    public void update(PasswordChangeReqDto dto, BCryptPasswordEncoder bCryptPasswordEncoder) {
+         this.password = bCryptPasswordEncoder.encode(dto.getNewPassword()); // 비밀번호 변경 시 암호화 필요
     }
 
     public boolean validatePassword(String inputPassword, BCryptPasswordEncoder bCryptPasswordEncoder) {

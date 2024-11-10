@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import project.movie.common.controller.response.ResponseDto;
+import project.movie.common.web.response.ResponseDto;
 import project.movie.common.handler.exception.CustomApiException;
 import project.movie.common.handler.exception.CustomForbiddenException;
 import project.movie.common.handler.exception.CustomValidationException;

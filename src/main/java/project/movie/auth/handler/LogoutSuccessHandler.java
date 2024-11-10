@@ -21,6 +21,6 @@ public class LogoutSuccessHandler implements org.springframework.security.web.au
         //request.getSession().invalidate();
         SecurityContextHolder.clearContext();
         // 로그아웃 후에 로그인 페이지로 이동한다.
-        response.sendRedirect("/user/loginUser.do");
+        response.sendRedirect("/");
     }
 }

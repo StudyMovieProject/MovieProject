@@ -9,6 +9,7 @@ import project.movie.member.domain.Member;
 import project.movie.member.dto.MemberRespDto;
 import project.movie.member.dto.MemberSaveReqDto;
 import project.movie.member.dto.MemberUpdateReqDto;
+import project.movie.member.dto.PasswordChangeReqDto;
 import project.movie.member.repository.MemberRepository;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public class MemberService {
         }
 
         // 2. 패스워드인코딩 + 회원 정보 변경
-        memberOP.get().update(memberUpdateReqDto, passwordEncoder);
+        memberOP.get().update(memberUpdateReqDto);
 
         // 3. dto 응답
         return new MemberRespDto(memberUpdateReqDto.to(bCryptPasswordEncoder));
@@ -78,5 +79,16 @@ public class MemberService {
 
     public List<Member> list() {
         return memberRepository.findAll();
+    }
+
+    @Transactional
+    public void changePassword(String memberId, PasswordChangeReqDto passwordChangeReqDto) {
+        Member findMember = getByMemberId(memberId);
+        boolean isEqual = passwordChangeReqDto.checkPasswordAndConfirmPassword();
+        if (!isEqual) throw new CustomApiException("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+        boolean isValid = findMember.validatePassword(passwordChangeReqDto.getPassword(), bCryptPasswordEncoder);
+        if (!isValid) throw new CustomApiException("현재 비밀번호가 일치하지 않습니다.");
+
+        findMember.update(passwordChangeReqDto, bCryptPasswordEncoder); // 비밀번호 변경
     }
 }
