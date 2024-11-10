@@ -5,18 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import project.movie.common.controller.response.ResponseDto;
+import project.movie.common.web.response.ResponseDto;
 import project.movie.member.domain.Member;
 import project.movie.member.dto.MemberRespDto;
 import project.movie.member.dto.MemberSaveReqDto;
 import project.movie.member.dto.MemberUpdateReqDto;
 import project.movie.member.service.MemberService;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController

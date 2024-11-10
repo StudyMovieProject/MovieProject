@@ -37,8 +37,8 @@ public class MemberSaveReqDto {
     private String detailAddress;
     private String fullname;
     @NotNull
-    @Pattern(regexp = "^(ADMIN|CUSTOMER)$")
-    private String role; // ADMIN, CUSTOMER
+    @Pattern(regexp = "GUEST|CUSTOMER")
+    private String role; // GUEST, CUSTOMER
     private MemberStatus status; // 활동 여부
 
     @Builder

@@ -3,7 +3,6 @@ package project.movie.member.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.movie.member.domain.Member;
@@ -17,9 +16,9 @@ import project.movie.member.domain.MemberStatus;
 public class MemberUpdateReqDto {
     @NotNull
     private String memberId;
-    @NotNull
-    @Size(min = 4, max = 20)
-    private String password;
+//    @NotNull
+//    @Size(min = 4, max = 20)
+//    private String password;
     @NotNull
     @Pattern(regexp = "^[a-zA-Z가-힣]{1,20}$", message = "한글/영문 1~20자 이내로 작성해주세요")
     private String username;
@@ -34,14 +33,14 @@ public class MemberUpdateReqDto {
     private String detailAddress;
     private String fullname;
     @NotNull
-    // @Pattern(regexp = "^(ADMIN|CUSTOMER)$")
-    private MemberRole role; // ADMIN, CUSTOMER
+    @Pattern(regexp = "GUEST|CUSTOMER", message = "유효하지 않은 역할입니다. GUEST 또는 CUSTOMER 중 하나를 선택하세요.")
+    private String role; // GUEST, CUSTOMER
     private MemberStatus status; // 활동 여부
 
     @Builder
     public MemberUpdateReqDto(Member member) {
         this.memberId = member.getMemberId();
-        this.password = member.getPassword();
+//        this.password = member.getPassword();
         this.username = member.getUsername();
         this.email = member.getEmail();
         this.tel = member.getTel();
@@ -49,14 +48,14 @@ public class MemberUpdateReqDto {
         this.address = member.getAddress();
         this.detailAddress = member.getDetailAddress();
         this.fullname = member.getFullname();
-        this.role = member.getRole();
+        this.role = member.getRole().toString();
         this.status = member.getStatus();
     }
 
     public Member to(BCryptPasswordEncoder bCryptPasswordEncoder) {
         return Member.builder()
                 .memberId(this.memberId)
-                .password(bCryptPasswordEncoder.encode(password))
+//                .password(bCryptPasswordEncoder.encode(password))
                 .username(username)
                 .email(email)
                 .tel(tel)
@@ -64,7 +63,7 @@ public class MemberUpdateReqDto {
                 .address(address)
                 .detailAddress(detailAddress)
                 .fullname(fullname)
-                .role(role)
+                .role(MemberRole.valueOf(role))
                 .status(status)
                 .build();
     }
