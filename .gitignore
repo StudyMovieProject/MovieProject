@@ -32,6 +32,7 @@ Thumbs.db         # Windows에서 생성되는 시스템 파일
 *.pid
 *.jar.original
 *.properties
+*.yml
 
 # 테스트 보고서
 /test-output/
