@@ -26,6 +26,9 @@ import project.movie.common.handler.exception.CustomApiException;
 import project.movie.member.domain.Member;
 import project.movie.member.dto.MemberRespDto;
 import project.movie.member.service.MemberService;
+
+import java.util.Optional;
+
 @RequestMapping("/api/board")
 @RequiredArgsConstructor
 @RestController
@@ -54,9 +57,10 @@ public class BoardController {
         if(userDetails==null){
             throw new CustomApiException("로그인 후 확인하세요");
         }
-        //Member member = memberService.getByMemberId(userDetails.getUsername());
+       Optional<Member> member = memberService.getCurrentUserid();
         //BoardRespDto boardRespDto = boardService.getMyList(userDetails.getUsername());
-        return new ResponseEntity<>(new ResponseDto<>(1, "나의 게시물 조회 성공",  boardService.getMyList(userDetails.getUsername())), HttpStatus.OK);
+        log.info(String.valueOf(member));
+        return new ResponseEntity<>(new ResponseDto<>(1, "나의 게시물 조회 성공",  boardService.getMyList(member)), HttpStatus.OK);
 
     }
 
@@ -66,8 +70,8 @@ public class BoardController {
         if(userDetails==null){
             throw new CustomApiException("로그인 후 작성하세요");
         }
-        String member = userDetails.getUsername();
-        requestsDto.setUserid(member);
+//        Member member = memberService.getCurrentUserid();
+//        requestsDto.setUserid(member);
         BoardRespDto boardRespDto = boardService.writeList(requestsDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시물 작성 성공", boardRespDto), HttpStatus.OK);
 
@@ -77,7 +81,8 @@ public class BoardController {
     //선택 게시물 수정
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> updateList(@PathVariable int id, @RequestBody BoardReqDto requestsDto )throws Exception{
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시물 수정 성공", boardService.updateList(id, requestsDto)), HttpStatus.OK);
+        boardService.updateList(id, requestsDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시물 수정 성공", requestsDto), HttpStatus.OK);
     }
 
     //선택한 게시물 삭제

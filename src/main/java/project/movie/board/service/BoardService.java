@@ -9,6 +9,7 @@ import project.movie.board.dto.BoardReqDto;
 import project.movie.board.dto.BoardRespDto;
 import project.movie.board.repository.BoardJpaRepository;
 import project.movie.member.domain.Member;
+import project.movie.member.service.MemberService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Service
 public class BoardService {
     private final BoardJpaRepository boardRepository;
-
+    private final MemberService memberService;
     // 전체 게시물 조회
     @Transactional(readOnly = true)
     public  List<BoardDto> getLists() {
@@ -36,16 +37,26 @@ public class BoardService {
     }
     //내가 작성한 게시물 조회
     @Transactional
-    public List<BoardDto> getMyList(String userid) {
-        List<Board> boards = boardRepository.findByUserid(userid);
+    public List<BoardDto> getMyList(Optional<Member> userid) {
+        Member member = null;
+        if (userid.isPresent()) {
+            member = userid.get();
+        }
+        List<Board> boards = boardRepository.findByUserid(member);
         List<BoardDto> boardDtos = new ArrayList<>();
         boards.forEach(s -> boardDtos.add(BoardDto.toDto(s)));
-            return boardDtos;
+        return boardDtos;
     }
 
     // 게시물 작성
     @Transactional
     public BoardRespDto writeList(BoardReqDto requestsDto) {
+        Optional<Member> currentUser = memberService.getCurrentUserid();
+        if(currentUser.isPresent()){
+            Member member = currentUser.get();
+            requestsDto.setUserid(member);
+        }
+
         Board board = new Board(requestsDto);
         boardRepository.save(board);
         return new BoardRespDto(board);
@@ -75,4 +86,6 @@ public class BoardService {
 
         return new BoardRespDto(board);
     }
+
+
 }

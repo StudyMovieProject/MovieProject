@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public class BoardRespDto {
     private int seq;
-    private String userid;
+    private Member userid;
     private String title;
     private String content;
     private String theater;

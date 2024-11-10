@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.movie.board.domain.Board;
+import project.movie.member.domain.Member;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardDto {
     private int seq;
-    private String userid;
+    private Member userid;
     private String title;
     private String content;
     private String theater;
