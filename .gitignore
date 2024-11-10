@@ -33,6 +33,8 @@ Thumbs.db         # Windows에서 생성되는 시스템 파일
 *.jar.original
 *.properties
 *.yml
+/src/main/resources/static/images/backdrop
+/src/main/resources/static/images/poster
 
 # 테스트 보고서
 /test-output/
