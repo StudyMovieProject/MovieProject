@@ -9,24 +9,25 @@ import project.movie.board.dto.BoardReqDto;
 import project.movie.board.dto.BoardRespDto;
 import project.movie.board.repository.BoardJpaRepository;
 import project.movie.member.domain.Member;
+import project.movie.member.repository.MemberRepository;
 import project.movie.member.service.MemberService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class BoardService {
     private final BoardJpaRepository boardRepository;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     // 전체 게시물 조회
     @Transactional(readOnly = true)
-    public  List<BoardDto> getLists() {
-        List<Board> boards = boardRepository.findAll();
-        List<BoardDto> boardDtos = new ArrayList<>();
-        boards.forEach(s -> boardDtos.add(BoardDto.toDto(s)));
-        return boardDtos;
+    public  List<BoardRespDto> getLists() {
+        return boardRepository.findAll().stream()
+                .map(BoardRespDto::new)
+                .collect(Collectors.toList());
     }
     //선택한 게시물 조회
     @Transactional
@@ -37,27 +38,19 @@ public class BoardService {
     }
     //내가 작성한 게시물 조회
     @Transactional
-    public List<BoardDto> getMyList(Optional<Member> userid) {
-        Member member = null;
-        if (userid.isPresent()) {
-            member = userid.get();
-        }
-        List<Board> boards = boardRepository.findByUserid(member);
-        List<BoardDto> boardDtos = new ArrayList<>();
-        boards.forEach(s -> boardDtos.add(BoardDto.toDto(s)));
-        return boardDtos;
+    public List<BoardRespDto> getMyList(String userid) {
+        return boardRepository.findByMember_MemberId(userid).stream()
+                .map(BoardRespDto::new)
+                .collect(Collectors.toList());
     }
 
     // 게시물 작성
     @Transactional
-    public BoardRespDto writeList(BoardReqDto requestsDto) {
-        Optional<Member> currentUser = memberService.getCurrentUserid();
-        if(currentUser.isPresent()){
-            Member member = currentUser.get();
-            requestsDto.setUserid(member);
-        }
-
-        Board board = new Board(requestsDto);
+    public BoardRespDto writeList(BoardReqDto requestsDto,String userId) {
+        Member member = memberRepository.findByMemberId(userId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+        requestsDto.setMember(userId); // Set the userId in the request DTO
+        Board board = new Board(requestsDto, memberRepository);
         boardRepository.save(board);
         return new BoardRespDto(board);
     }

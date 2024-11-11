@@ -13,7 +13,7 @@ import project.movie.member.domain.Member;
 public class BoardReqDto {
 
     private int seq;
-    private Member userid;
+    private String member;
     private String title;
     private String content;
     private String theater;

@@ -21,12 +21,13 @@ import project.movie.board.dto.BoardDto;
 import project.movie.board.dto.BoardReqDto;
 import project.movie.board.dto.BoardRespDto;
 import project.movie.board.service.BoardService;
-import project.movie.common.controller.response.ResponseDto;
 import project.movie.common.handler.exception.CustomApiException;
 import project.movie.member.domain.Member;
 import project.movie.member.dto.MemberRespDto;
 import project.movie.member.service.MemberService;
+import project.movie.common.web.response.ResponseDto;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequestMapping("/api/board")
@@ -57,10 +58,10 @@ public class BoardController {
         if(userDetails==null){
             throw new CustomApiException("로그인 후 확인하세요");
         }
-       Optional<Member> member = memberService.getCurrentUserid();
-        //BoardRespDto boardRespDto = boardService.getMyList(userDetails.getUsername());
-        log.info(String.valueOf(member));
-        return new ResponseEntity<>(new ResponseDto<>(1, "나의 게시물 조회 성공",  boardService.getMyList(member)), HttpStatus.OK);
+
+        List<BoardRespDto> boardRespDtoList = boardService.getMyList(userDetails.getUsername());
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "나의 게시물 조회 성공",  boardRespDtoList), HttpStatus.OK);
 
     }
 
@@ -72,7 +73,7 @@ public class BoardController {
         }
 //        Member member = memberService.getCurrentUserid();
 //        requestsDto.setUserid(member);
-        BoardRespDto boardRespDto = boardService.writeList(requestsDto);
+        BoardRespDto boardRespDto = boardService.writeList(requestsDto,userDetails.getUsername());
         return new ResponseEntity<>(new ResponseDto<>(1, "게시물 작성 성공", boardRespDto), HttpStatus.OK);
 
     }
