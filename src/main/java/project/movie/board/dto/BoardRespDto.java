@@ -12,21 +12,24 @@ import java.time.LocalDateTime;
 
 public class BoardRespDto {
     private int seq;
-    private Member userid;
     private String title;
     private String content;
     private String theater;
     private int cate;
+    private String memberId;
 
-    public BoardRespDto(Board entity) {
-        this.seq = entity.getSeq();
-        this.userid = entity.getUserid();
-        this.title = entity.getTitle();
-        this.content = entity.getContent();
-        this.theater = entity.getTheater();
-        this.cate = entity.getCate();
-        //this.createDate = entity.createDate();
+    public BoardRespDto(Board board) {
 
+        this.seq = board.getSeq();
+        this.title = board.getTitle();
+        this.content = board.getContent();
+        this.theater = board.getTheater();
+        this.cate = board.getCate();
+        this.memberId = board.getMember().getMemberId();
     }
+
+    public BoardRespDto(BoardRespDto boardRespDto) {
+    }
+
 
 }

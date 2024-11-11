@@ -9,6 +9,7 @@ import project.movie.common.domain.Base;
 import project.movie.member.domain.Member;
 import project.movie.member.domain.MemberRole;
 import project.movie.member.domain.MemberStatus;
+import project.movie.member.repository.MemberRepository;
 
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -28,8 +29,8 @@ public class Board extends Base {
     private String content;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="userid")
-    private Member userid;
+    @JoinColumn(name="member_id")
+    private Member member;
 
     @Column(name="theater")
     private String theater;
@@ -37,11 +38,12 @@ public class Board extends Base {
     @Column(name="cate")
     private int cate;
 
-    public Board(BoardReqDto requestsDto) {
+    public Board(BoardReqDto requestsDto, MemberRepository memberRepository){
         this.seq = requestsDto.getSeq();
         this.title = requestsDto.getTitle();
         this.content = requestsDto.getContent();
-        this.userid = requestsDto.getUserid();
+        this.member = memberRepository.findByMemberId(requestsDto.getMember())
+                .orElseThrow(() -> new RuntimeException("Member not found"));
         this.theater = requestsDto.getTheater();
         this.cate = requestsDto.getCate();
     }
@@ -50,7 +52,7 @@ public class Board extends Base {
     public void update(BoardReqDto requestsDto) {
         this.title = requestsDto.getTitle();
         this.content = requestsDto.getContent();
-        this.userid = requestsDto.getUserid();
+        //this.member = requestsDto.getMember()
         this.theater = requestsDto.getTheater();
         this.cate = requestsDto.getCate();
     }
