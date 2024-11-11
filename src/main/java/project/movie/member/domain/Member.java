@@ -1,5 +1,6 @@
 package project.movie.member.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,28 +21,48 @@ import project.movie.member.dto.PasswordChangeReqDto;
 @Slf4j
 @ToString
 public class Member extends Base {
+    @Schema(description = "아이디", required = true, example = "jin8374")
     @Id
+    @Column(name = "member_id")
     private String memberId;
+
+    @Schema(description = "비밀번호", required = true, example = "wlsrud1234")
     @Column(unique = true, nullable = false, length = 60) // 패스워드 인코딩(BCrypt)
     private String password;
+
+    @Schema(description = "이름", required = true, example = "진경이")
     @Column(nullable = false, length = 20)
     private String username;
+
+    @Schema(description = "이메일", required = true, example = "park32122@naver.com")
     @Column(nullable = false, length = 30)
     private String email;
+
+    @Schema(description = "전화번호", required = true, example = "01066554444")
     @Column(length = 20)
     private String tel;
+
+    @Schema(description = "우편코드", example = "417-888")
     @Column(length = 20)
     private String zipcode;
+
+    @Schema(description = "주소", example = "서울시 강남구 대치동")
     private String address;
+
+    @Schema(description = "상세 주소", example = "66-1")
     @Column(name="detail_address")
     private String detailAddress;
+
+    @Schema(description = "전체 이름", example = "박진경")
     // @Column(nullable = false, length = 20)
     private String fullname;
 
+    @Schema(description = "권한", example = "GUEST | CUSTOMER")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberRole role; // GUEST, CUSTOMER
 
+    @Schema(description = "활동 여부", example = "true | false")
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private MemberStatus status; // 활동 여부

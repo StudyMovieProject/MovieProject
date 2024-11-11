@@ -1,5 +1,10 @@
 package project.movie.member.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,12 @@ public class MyInfoController {
 
     private final MemberService memberService;
 
+    @Operation(summary = "로그인 사용자 회원 정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 사용자 회원 정보 조회 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
+    })
     @GetMapping
     public ResponseEntity<?> get(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("MyInfoController getByMemberId 메서드 실행");
@@ -30,6 +41,12 @@ public class MyInfoController {
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 유저 정보 조회 성공", MemberRespDto.from(member)), HttpStatus.OK);
     }
 
+    @Operation(summary = "로그인 사용자 회원 정보 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 사용자 회원 정보 조회 수정 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
+    })
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody @Valid MemberUpdateReqDto MemberUpdateReqDto, @AuthenticationPrincipal UserDetails userDetails) {
         log.info("MyInfoController join 메서드 실행 : {}", MemberUpdateReqDto.toString());
@@ -37,6 +54,12 @@ public class MyInfoController {
         return new ResponseEntity<>(new ResponseDto<>(1, "회원정보 수정 성공", userRespDto), HttpStatus.OK);
     }
 
+    @Operation(summary = "로그인 사용자 비밀번호 변경")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 사용자 비밀번호 변경 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
+    })
     @PutMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordChangeReqDto passwordChangeReqDto, @AuthenticationPrincipal UserDetails userDetails) {
         log.info("MyInfoController changePassword 메서드 실행 : {}", passwordChangeReqDto.toString());
@@ -44,6 +67,12 @@ public class MyInfoController {
         return new ResponseEntity<>(new ResponseDto<>(1, "비밀번호 변경 성공", null), HttpStatus.OK);
     }
 
+    @Operation(summary = "로그인 사용자 비밀번호 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 사용자 비밀번호 삭제 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
+    })
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String password) {
         log.info("MyInfoController join 메서드 실행");

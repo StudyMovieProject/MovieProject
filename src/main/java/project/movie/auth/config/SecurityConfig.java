@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,8 +20,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import project.movie.auth.handler.LogoutSuccessHandler;
 import project.movie.auth.jwt.filter.JwtAuthenticationFilter;
 import project.movie.auth.jwt.filter.JwtAuthorizationFilter;
+import project.movie.auth.jwt.filter.JwtGuestAuthenticationFilter;
 import project.movie.auth.jwt.util.JWTUtil;
-import project.movie.member.domain.MemberRole;
+import project.movie.nonmember.repository.NonMemberRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +31,7 @@ import project.movie.member.domain.MemberRole;
 public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final AuthenticationConfiguration authenticationConfiguration;
+    // private final NonMemberRepository nonMemberRepository;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -67,16 +68,15 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/logout", "/api/members/join").permitAll()
-                        .requestMatchers("/api/**").authenticated()
-                        .requestMatchers("/api/admin/**").hasRole("" + MemberRole.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도 됨
+                        .requestMatchers("/", "/login", "/logout", "/api/members/join", "/guest-login").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated());
 
         http
-                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtAuthorizationFilter(jwtUtil), JwtAuthenticationFilter.class);
+                // .addFilterBefore(new JwtGuestAuthenticationFilter(nonMemberRepository, jwtUtil), JwtAuthenticationFilter.class) // 비회원 로그인 필터
+                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class) // 회원 로그인 필터
+                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil), JwtAuthenticationFilter.class);
 
         //세션 설정 : STATELESS
         http
@@ -91,7 +91,7 @@ public class SecurityConfig {
         http.logout(logout -> logout
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSEESSIONID")
+                .deleteCookies("JSEESSIONID", "Authorization")
                 .logoutSuccessHandler(new LogoutSuccessHandler())
                 .permitAll());
 
