@@ -39,4 +39,8 @@ public class Seat {
     @Schema(description = "좌석 줄번호", required = true, example = "1")
     @Column(name = "seat_line_no")
     private Integer seatLineNo;
+
+    @Transient
+    @Schema(description = "예매 가능 여부", required = true, example = "true | false")
+    private Boolean isBookable; // 예매 가능 여부
 }

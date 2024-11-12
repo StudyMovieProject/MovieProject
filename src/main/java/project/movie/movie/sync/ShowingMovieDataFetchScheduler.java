@@ -45,7 +45,7 @@ public class ShowingMovieDataFetchScheduler {
     @Value("${spring.tmdb.api-key}")
     private String apiKey;
 
-    @Scheduled(cron = "20 * 3 * * ?")
+    @Scheduled(cron = "2 * 3 * * ?")
     public void fetchMovieData() {
         log.info("ShowingMovieDataFetchScheduler fetchMovieData 스케쥴러 실행");
         try {
