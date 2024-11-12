@@ -62,7 +62,7 @@ public class Member extends Base {
     @Column(nullable = false)
     private MemberRole role; // GUEST, CUSTOMER
 
-    @Schema(description = "활동 여부", example = "true | false")
+    @Schema(description = "활동 여부", example = "ACTIVE | INACTIVE")
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private MemberStatus status; // 활동 여부

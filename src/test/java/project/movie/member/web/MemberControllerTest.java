@@ -66,7 +66,7 @@ class MemberControllerTest extends DummyObject {
         memberSaveReqDto.setTel("01023231222");
         memberSaveReqDto.setDetailAddress("89-8");
         memberSaveReqDto.setZipcode("417-840");
-        memberSaveReqDto.setStatus(MemberStatus.PENDING);
+        memberSaveReqDto.setStatus(MemberStatus.ACTIVE);
 
         String requestBody = om.writeValueAsString(memberSaveReqDto);
 
@@ -93,7 +93,7 @@ class MemberControllerTest extends DummyObject {
         memberSaveReqDto.setTel("01023231222");
         memberSaveReqDto.setDetailAddress("89-8");
         memberSaveReqDto.setZipcode("417-840");
-        memberSaveReqDto.setStatus(MemberStatus.PENDING);
+        memberSaveReqDto.setStatus(MemberStatus.ACTIVE);
 
         String requestBody = om.writeValueAsString(memberSaveReqDto);
 
@@ -121,7 +121,7 @@ class MemberControllerTest extends DummyObject {
         memberSaveReqDto.setTel("01023231222111");
         memberSaveReqDto.setDetailAddress("89-8");
         memberSaveReqDto.setZipcode("417-840");
-        memberSaveReqDto.setStatus(MemberStatus.PENDING);
+        memberSaveReqDto.setStatus(MemberStatus.ACTIVE);
 
         String requestBody = om.writeValueAsString(memberSaveReqDto);
 

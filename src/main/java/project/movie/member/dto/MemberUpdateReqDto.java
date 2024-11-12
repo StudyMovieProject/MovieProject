@@ -45,7 +45,7 @@ public class MemberUpdateReqDto {
     @NotNull
     @Pattern(regexp = "GUEST|CUSTOMER", message = "유효하지 않은 역할입니다. GUEST 또는 CUSTOMER 중 하나를 선택하세요.")
     private String role; // GUEST, CUSTOMER
-    @Schema(description = "활동 여부", example = "true | false")
+    @Schema(description = "활동 여부", example = "ACTIVE | INACTIVE")
     private MemberStatus status; // 활동 여부
 
     @Builder

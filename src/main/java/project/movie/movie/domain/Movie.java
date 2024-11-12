@@ -1,5 +1,6 @@
 package project.movie.movie.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,62 +29,76 @@ import java.time.LocalDate;
 @Getter
 @ToString
 public class Movie extends Base {
+    @Schema(description = "영화 고유 번호", required = true, example = "1")
     @Id
     @GeneratedValue
-    @Column(name = "member_id")
+    @Column(name = "movie_id")
     private Long id;
 
     // 한글 제목
+    @Schema(description = "영화제목", required = true, example = "헤리포터와 불의 잔")
     @NotBlank(message = "영화 제목은 공백 일 수 없습니다.")
     private String title;
 
     // 영어 제목
+    @Schema(description = "영화제목(영문)", example = "Harry Potter and the Goblet of Fire")
     @Column(name = "title_en")
     private String titleEn;
 
     // 트레일러
+    @Schema(description = "트레일러", example = "")
     private String trailer;
 
     // 줄거리
+    @Schema(description = "줄거리", example = "해리 포터 일생일대 최대 난관! 요즘 들어 매일 꾸는 악몽 때문....")
     @Lob
     @Column(name = "plot", columnDefinition="BLOB")
     private String plot;
 
     // 포스터 이미지 경로
+    @Schema(description = "포스터 이미지", example = "/images/poster/63xYQj1BwRFielxsBDXvHIJyXVm.jpg")
     @Column(name = "poster_image")
     private String posterImage;
 
     // 배너 이미지 경로
+    @Schema(description = "배너 이미지", example = "/images/backdrop/18TSJF1WLA4CkymvVUcKDBwUJ9F.jpg")
     @Column(name = "backdrop_image")
     private String backdropImage;
 
     // 개봉년도
+    @Schema(description = "개봉년도", example = "2024")
     @Column(name = "product_yaer")
     private Integer productYear;
 
     // 개봉일
+    @Schema(description = "개봉일", example = "2024-10-09")
     @Column(name = "product_date")
     private String productDate;
 
     // 상영 시간
+    @Schema(description = "상영시간 (분단위)", example = "107")
     @NotNull(message = "상영 시간은 Null 일 수 없습니다.")
     @Column(name = "show_time")
     private Integer showTime;
 
     // 상영일
+    @Schema(description = "상영일", example = "2024-09-07")
     @NotNull(message = "상영일은 Null 일 수 없습니다.")
     @Column(name = "start_date")
     private LocalDate startDate;
 
     // 종영일
+    @Schema(description = "종영일", example = "2024-12-07")
     @Column(name = "end_date")
     private LocalDate endDate;
 
     // 인기도
+    @Schema(description = "인기도", example = "1435")
     @Column
     private Integer popularity;
 
     // 영화 코드
+    @Schema(description = "영화코드", example = "1034541")
     @Column
     private Integer movieCd;
 
