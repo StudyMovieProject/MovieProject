@@ -60,7 +60,7 @@ public class MemberSaveReqDto {
     @Pattern(regexp = "GUEST|CUSTOMER")
     private String role; // GUEST, CUSTOMER
 
-    @Schema(description = "활동 여부", example = "true | false")
+    @Schema(description = "활동 여부", example = "ACTIVE | INACTIVE")
     private MemberStatus status; // 활동 여부
 
     @Builder
@@ -90,7 +90,7 @@ public class MemberSaveReqDto {
                 .detailAddress(detailAddress)
                 .fullname(fullname)
                 .role(MemberRole.CUSTOMER)
-                .status(MemberStatus.PENDING)
+                .status(MemberStatus.ACTIVE)
                 .build();
     }
 }

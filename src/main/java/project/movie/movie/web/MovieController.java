@@ -1,5 +1,11 @@
 package project.movie.movie.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,49 +38,70 @@ public class MovieController {
      *
      * @return List
      */
+    @Operation(summary = "영화 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "영화 목록 조회 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
+    })
     @GetMapping("/status/{status}")
-    public ResponseEntity<ResponseDto<List<MovieResDto>>> getMoviesByStatus(@PathVariable String status) {
-        log.info("영화 상태 조회 메서드 실행: {}", status);
+    public ResponseEntity<ResponseDto<List<MovieResDto>>> getMoviesByStatus(
+            @PathVariable @Parameter(description = "영화 상태", schema = @Schema(allowableValues = {"POPULAR", "LATEST", "UPCOMING"})) String status) {
+        log.info("영화 목록 조회 메서드 실행: {}", status);
 
         try {
             MovieStatus movieStatus = MovieStatus.valueOf(status.toUpperCase());
             List<Movie> movies = movieService.getMoviesByStatus(movieStatus);
+
+            for (Movie movie : movies) {
+                System.out.println(movie.toString());
+            }
+
             List<MovieResDto> movieRespDtos = movies.stream().map(MovieResDto::from).toList();
             return ResponseEntity.ok(new ResponseDto<>(1, "영화 목록 조회 성공", movieRespDtos));
         } catch (IllegalArgumentException e) {
             log.warn("유효하지 않은 영화 상태: {}", status);
-            return ResponseEntity.badRequest()
-                    .body(new ResponseDto<>(-1, "유효하지 않은 영화 상태입니다.", null));
+            return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "유효하지 않은 영화 상태입니다.", null));
         }
     }
 
     // 인기 영화 목록 조회
+    @Deprecated
     @GetMapping("/popular")
-    public ResponseEntity<?> getPopularMovies() {
+    public ResponseEntity<?> listPopular() {
         List<Movie> popularMovies = movieService.getPopularMovies();
         List<MovieResDto> movieRespDtos = popularMovies.stream().map(MovieResDto::from).toList();
         return new ResponseEntity<>(new ResponseDto<>(1, "박스 오피스 영화 목록 조회 성공", movieRespDtos), HttpStatus.OK);
     }
 
     // 최신 영화 목록 조회
+    @Deprecated
     @GetMapping("/latest")
-    public ResponseEntity<?> getLatestMovies() {
+    public ResponseEntity<?> listLatest() {
         List<Movie> popularMovies = movieService.getLatestMovies();
         List<MovieResDto> movieRespDtos = popularMovies.stream().map(MovieResDto::from).toList();
         return new ResponseEntity<>(new ResponseDto<>(1, "박스 오피스 영화 목록 조회 성공", movieRespDtos), HttpStatus.OK);
     }
 
     // 예정 영화 목록 조회
+    @Deprecated
     @GetMapping("/upcoming")
-    public ResponseEntity<?> getUpcomingMovies() {
+    public ResponseEntity<?> listUpcoming() {
         List<Movie> popularMovies = movieService.getUpcomingMovies();
         List<MovieResDto> movieRespDtos = popularMovies.stream().map(MovieResDto::from).toList();
         return new ResponseEntity<>(new ResponseDto<>(1, "박스 오피스 영화 목록 조회 성공", movieRespDtos), HttpStatus.OK);
     }
 
     // 영화 상세 정보 조회
+    @Operation(summary = "영화 상세 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "영화 상세 조회 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable Long id) {
+    public ResponseEntity<?> get(
+            @PathVariable @Parameter(description = "영화 고유 번호", example = "1") Long id) {
         log.info("getByMovieId 메서드 실행: {}", id);
         Movie movie = movieService.getById(id);
         return new ResponseEntity<>(new ResponseDto<>(1, "영화 정보 조회 성공", MovieResDto.from(movie)), HttpStatus.OK);
