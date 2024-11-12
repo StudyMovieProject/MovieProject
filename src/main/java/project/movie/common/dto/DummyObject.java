@@ -18,7 +18,7 @@ public class DummyObject {
                 .email(username + "@nate.com")
                 .fullname(fullname)
                 .role(MemberRole.CUSTOMER)
-                .status(MemberStatus.PENDING)
+                .status(MemberStatus.ACTIVE)
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class DummyObject {
                 .email(username + "@naver.com")
                 .fullname(fullname)
                 .role(MemberRole.CUSTOMER)
-                .status(MemberStatus.PENDING)
+                .status(MemberStatus.ACTIVE)
                 .build();
     }
 

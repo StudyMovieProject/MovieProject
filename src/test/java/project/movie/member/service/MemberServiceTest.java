@@ -47,7 +47,7 @@ class MemberServiceTest extends DummyObject {
 
         // then
         assertNotNull(memberRespDto);
-        assertThat(memberRespDto.getStatus()).isEqualTo(MemberStatus.PENDING); // 초기 회원 가입시 false 가 기본 값
+        assertThat(memberRespDto.getStatus()).isEqualTo(MemberStatus.ACTIVE); // 초기 회원 가입시 false 가 기본 값
         assertThat(memberRespDto.getMemberId()).isEqualTo("net1510");
         assertThat(memberRespDto.getFullname()).isEqualTo("leejongwook");
     }
