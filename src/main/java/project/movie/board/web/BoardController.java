@@ -1,5 +1,10 @@
 package project.movie.board.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -36,8 +41,16 @@ import java.util.Optional;
 public class BoardController {
     private final MemberService memberService;
     private final BoardService boardService;
+
+
     // 전체 게시물 조회
+    @Operation(summary = "전체 게시물 조회")
     @RequestMapping(value = "/lists", method = RequestMethod.GET)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "전체 게시물 조회 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "로그인 후 확인하세요"),
+    })
     public ResponseEntity<?> getLists() {
         log.info("전체 게시물 가져오기 실행");
 
@@ -45,14 +58,26 @@ public class BoardController {
     }
 
     //선택한 게시물 조회
+    @Operation(summary = "선택한 게시물 조회")
     @RequestMapping(value = "/lists/{id}", method = RequestMethod.GET)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "선택 게시물 조회 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "로그인 후 확인하세요"),
+    })
     public ResponseEntity<?> getList(@PathVariable int id) {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "선택한 게시물 조회 성공",  boardService.getList(id)), HttpStatus.OK);
     }
 
     //본인이 작성한 게시물 조회
+    @Operation(summary = "본인이 작성한 게시물 조회")
     @RequestMapping(value = "/lists/myList", method = RequestMethod.GET)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "나의 게시물 조회 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "로그인 후 확인하세요"),
+    })
     public ResponseEntity<?> getMyList(@AuthenticationPrincipal UserDetails userDetails) {
         if(userDetails==null){
             throw new CustomApiException("로그인 후 확인하세요");
@@ -65,7 +90,13 @@ public class BoardController {
     }
 
     // 게시물 작성
+    @Operation(summary = "게시물 작성")
     @RequestMapping(value = "/write", method = RequestMethod.POST)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "게시물 작성 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "로그인 후 작성하세요"),
+    })
     public ResponseEntity<?> writeList(@RequestBody BoardReqDto requestsDto,@AuthenticationPrincipal UserDetails userDetails) {
         if(userDetails==null){
             throw new CustomApiException("로그인 후 작성하세요");
@@ -79,14 +110,26 @@ public class BoardController {
 
 
     //선택 게시물 수정
+    @Operation(summary = "선택한 게시물 수정")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "게시물 수정 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "로그인 후 수정하세요"),
+    })
     public ResponseEntity<?> updateList(@PathVariable int id, @RequestBody BoardReqDto requestsDto )throws Exception{
         boardService.updateList(id, requestsDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "게시물 수정 성공", requestsDto), HttpStatus.OK);
     }
 
     //선택한 게시물 삭제
+    @Operation(summary = "선택한 게시물 삭제 ")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "삭제 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "로그인 후 삭제하세요"),
+    })
     public ResponseEntity<?> deleteList(@PathVariable int id ){
         return new ResponseEntity<>(new ResponseDto<>(1, "게시물 삭제 성공", boardService.deleteList(id)), HttpStatus.OK);
     }
