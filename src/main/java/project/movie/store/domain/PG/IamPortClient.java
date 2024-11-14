@@ -2,14 +2,15 @@ package project.movie.store.domain.PG;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import project.movie.common.handler.exception.CustomApiException;
 import project.movie.store.dto.PG.IamportResponseDto;
 import project.movie.store.dto.PG.TokenResponseDto;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Component
@@ -42,6 +43,40 @@ public class IamPortClient {
         );
         return response.getBody();
     }
+
+
+    public IamportResponseDto cancelPaymentByImpUid(String impUid, String reason) {
+
+        String cancelUrl = BASE_URL + "/payments/cancel";
+
+        HttpHeaders headers = createHeaders(getAccessToken());
+        headers.set("Content-Type", "application/json");
+
+        Map<String, Object> cancelData = new HashMap<>();
+        cancelData.put("imp_uid", impUid);
+        cancelData.put("reason", reason);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(cancelData, headers);
+
+        try {
+            ResponseEntity<IamportResponseDto> response = restTemplate.exchange(
+                    cancelUrl,
+                    HttpMethod.POST,
+                    requestEntity,
+                    IamportResponseDto.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new CustomApiException("결제 취소 실패: Iamport 응답 오류");
+            }
+
+        } catch (Exception e) {
+            throw new CustomApiException("결제 취소 요청 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
 
     private String getAccessToken(){
         String tokenUrl = BASE_URL + "users/getToken";
