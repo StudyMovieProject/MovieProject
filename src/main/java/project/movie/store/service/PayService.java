@@ -130,7 +130,7 @@ public class PayService {
                 couponService.couponSave(findPay);
                 return response;
             }else{
-                // iamport 결제취소 api 추가예정
+                cancelPGResponse(dto.getImpUid(), "결제 금액 불일치로 인한 취소");
                 throw new CustomApiException("결제 금액 오류");
             }
         }else{
@@ -138,6 +138,19 @@ public class PayService {
         }
 
     }
+
+    private void cancelPGResponse(String impUid, String reason){
+        try{
+            IamportResponseDto response = iamPortClient.cancelPaymentByImpUid(impUid, reason);
+
+            if(!"cancelled".equals(response.getResponse().getStatus())){
+                throw new CustomApiException("결제 취소 실패 : PG서버 응답 오류");
+            }
+        }catch (Exception e){
+            throw new CustomApiException("결제 취소중 오류" + e.getMessage());
+        }
+    }
+
 
     public List<Pay> getPayInfoAllByMember(String memberId){
         return payRepository.findByMember_memberId(memberId)
