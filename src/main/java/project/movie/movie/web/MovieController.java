@@ -53,10 +53,6 @@ public class MovieController {
             MovieStatus movieStatus = MovieStatus.valueOf(status.toUpperCase());
             List<Movie> movies = movieService.getMoviesByStatus(movieStatus);
 
-            for (Movie movie : movies) {
-                System.out.println(movie.toString());
-            }
-
             List<MovieResDto> movieRespDtos = movies.stream().map(MovieResDto::from).toList();
             return ResponseEntity.ok(new ResponseDto<>(1, "영화 목록 조회 성공", movieRespDtos));
         } catch (IllegalArgumentException e) {
