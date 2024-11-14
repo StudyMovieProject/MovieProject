@@ -8,6 +8,8 @@ import project.movie.theater.domain.Screen;
 import project.movie.theater.domain.Theater;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Getter
@@ -22,16 +24,16 @@ public class ScheduleSaveDto {
     @NotNull
     private Screen screen;
     @NotNull
-    private Date scheduleDate;
+    private LocalDate scheduleDate;
     @NotNull
-    private Time startAt;
+    private LocalTime startAt;
     @NotNull
-    private Time endAt;
+    private LocalTime endAt;
     @NotNull
     private String code;
 
     @Builder
-    public ScheduleSaveDto(Movie movie, Theater theater, Screen screen, Date scheduleDate, Time startAt, Time endAt, String code) {
+    public ScheduleSaveDto(Movie movie, Theater theater, Screen screen, LocalDate scheduleDate, LocalTime startAt, LocalTime endAt, String code) {
         this.movie = movie;
         this.theater = theater;
         this.screen = screen;

@@ -12,6 +12,8 @@ import project.movie.theater.domain.Screen;
 import project.movie.theater.domain.Theater;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -40,18 +42,18 @@ public class Schedule extends Base {
     private Screen screen;
 
     @Column(name = "schedule_date")
-    private Date scheduleDate;
+    private LocalDate scheduleDate;
 
     @Column(name = "start_at")
-    private Time startAt;
+    private LocalTime startAt;
 
     @Column(name = "end_at")
-    private Time endAt;
+    private LocalTime endAt;
 
     private String code;
 
     @Builder
-    public Schedule(Long id, Movie movie, Theater theater, Screen screen, Date scheduleDate, Time startAt, Time endAt, String code) {
+    public Schedule(Long id, Movie movie, Theater theater, Screen screen, LocalDate scheduleDate, LocalTime startAt, LocalTime endAt, String code) {
         this.id = id;
         this.movie = movie;
         this.theater = theater;

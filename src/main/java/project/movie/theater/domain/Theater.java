@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class Theater {
 
-    @Schema(description = "영화관 코드", required = true, example = "1")
+    @Schema(description = "영화관 고유 번호", required = true, example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "theater_id")
