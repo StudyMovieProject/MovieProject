@@ -1,11 +1,14 @@
-package project.movie.store.domain;
+package project.movie.store.domain.pay;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import project.movie.member.domain.Member;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="pay")
@@ -14,7 +17,7 @@ import java.time.LocalDateTime;
 public class Pay {
 
     @Id
-    @Column(name="pay_code", nullable = false, length = 20)
+    @Column(name="pay_code", nullable = false, length = 100)
     private String payCode;
 
     @ManyToOne
@@ -25,7 +28,7 @@ public class Pay {
     private String payType;
 
     @Column(name="pay_price", nullable = false)
-    private Integer pay_price;
+    private Integer payPrice;
 
     @Column(name="pay_date", nullable = false)
     private LocalDateTime payDate;
@@ -36,5 +39,14 @@ public class Pay {
     @Column(name="pay_status", nullable = false)
     private Integer payStatus;
 
-    protected Pay(){};
+    @JsonManagedReference
+    @OneToMany(mappedBy = "pay", cascade= CascadeType.ALL)
+    private List<PayDetail> payDetails;
+
+    public Pay(){};
+
+    public void generatePayCode(){
+        String payCode = UUID.randomUUID().toString();
+        this.payCode = payCode;
+    }
 }

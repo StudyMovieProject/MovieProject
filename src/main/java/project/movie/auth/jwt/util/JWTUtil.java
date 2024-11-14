@@ -45,4 +45,5 @@ public class JWTUtil {
                 .signWith(secretKey) // 암호화할 때 사용할 값
                 .compact();
     }
+
 }
