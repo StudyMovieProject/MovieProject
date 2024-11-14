@@ -1,8 +1,10 @@
-package project.movie.store.domain;
+package project.movie.store.domain.coupon;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import project.movie.store.domain.item.Item;
+import project.movie.store.domain.pay.Pay;
 
 import java.time.LocalDateTime;
 
@@ -13,8 +15,9 @@ import java.time.LocalDateTime;
 public class Coupon {
 
     @Id
-    @Column(name="cp_code", nullable = false, length = 20)
-    private String cpCode;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="cp_code", nullable = false)
+    private int cpCode;
 
     @ManyToOne
     @JoinColumn(name="pay_code", nullable = false)
@@ -25,7 +28,7 @@ public class Coupon {
     private Item item;
 
     @Column(name="customer_id", nullable = false, length = 30)
-    private String customerId;
+    private String memberId;
 
     @Column(name="cp_date")
     private LocalDateTime cpDate;
@@ -33,5 +36,5 @@ public class Coupon {
     @Column(name="cp_status")
     private Integer cpStatus;
 
-    protected Coupon(){}
+    public Coupon(){}
 }

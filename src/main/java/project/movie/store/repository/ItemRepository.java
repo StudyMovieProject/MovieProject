@@ -1,11 +1,10 @@
 package project.movie.store.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.movie.store.domain.Item;
+import project.movie.store.domain.item.Item;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
-    List<Item> findByItemType(String itemType);
-    List<Item> findByItemNameContaining(String itemName);
+    Optional<Item> findByItemCode(int itemCode);
 }

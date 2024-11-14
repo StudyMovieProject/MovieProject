@@ -1,5 +1,5 @@
 package project.movie.member.domain;
 
 public enum MemberStatus {
-    INACTIVE, ACTIVE
+    INACTIVE, ACTIVE, PENDING
 }

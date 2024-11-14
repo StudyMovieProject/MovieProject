@@ -20,9 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import project.movie.auth.handler.LogoutSuccessHandler;
 import project.movie.auth.jwt.filter.JwtAuthenticationFilter;
 import project.movie.auth.jwt.filter.JwtAuthorizationFilter;
-import project.movie.auth.jwt.filter.JwtGuestAuthenticationFilter;
 import project.movie.auth.jwt.util.JWTUtil;
-import project.movie.nonmember.repository.NonMemberRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -68,7 +66,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/logout", "/api/members/join", "/guest-login").permitAll()
+                        .requestMatchers("/", "/login", "/logout", "/api/members/join", "/guest-login", "/api/items", "/api/pay/**", "/api/coupon/**", "/api/cart", "/api/pay/**", "/test").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated());

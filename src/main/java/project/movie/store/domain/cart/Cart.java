@@ -1,8 +1,10 @@
-package project.movie.store.domain;
+package project.movie.store.domain.cart;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import project.movie.member.domain.Member;
+import project.movie.store.domain.item.Item;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +23,10 @@ public class Cart {
     @JoinColumn(name="item_code", nullable = false)
     private Item item;
 
+    @ManyToOne
+    @JoinColumn(name="member_id", nullable = false)
+    private Member member;
+
     @Column(name="cart_qty", nullable = false)
     private Integer cartQty;
 
@@ -31,7 +37,13 @@ public class Cart {
     private LocalDateTime cartDate;
 
     protected Cart(){}
-
+    public Cart(Item item, Member member, Integer cartQty, Integer cartStatus){
+        this.item = item;
+        this.member = member;
+        this.cartQty = cartQty;
+        this.cartStatus = cartStatus;
+        this.cartDate = LocalDateTime.now();
+    }
 
 
 

@@ -1,8 +1,10 @@
-package project.movie.store.domain;
+package project.movie.store.domain.pay;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import project.movie.store.domain.item.Item;
 
 @Entity
 @Table(name="paydetail")
@@ -15,6 +17,7 @@ public class PayDetail {
     @Column(name="payde_code", nullable = false)
     private Integer paydeCode;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="pay_code", nullable = false)
     private Pay pay;
@@ -26,5 +29,5 @@ public class PayDetail {
     @Column(name="cart_qty")
     private Integer cartQty;
 
-    protected PayDetail(){}
+    public PayDetail(){}
 }
