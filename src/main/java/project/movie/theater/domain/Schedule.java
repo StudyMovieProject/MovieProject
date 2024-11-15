@@ -1,4 +1,4 @@
-package project.movie.movie.domain;
+package project.movie.theater.domain;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -8,13 +8,10 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import project.movie.common.domain.Base;
-import project.movie.theater.domain.Screen;
-import project.movie.theater.domain.Theater;
+import project.movie.movie.domain.Movie;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)

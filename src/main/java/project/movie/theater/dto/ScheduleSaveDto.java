@@ -1,16 +1,14 @@
-package project.movie.movie.dto;
+package project.movie.theater.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import project.movie.movie.domain.Movie;
-import project.movie.movie.domain.Schedule;
+import project.movie.theater.domain.Schedule;
 import project.movie.theater.domain.Screen;
 import project.movie.theater.domain.Theater;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 @Getter
 @Setter

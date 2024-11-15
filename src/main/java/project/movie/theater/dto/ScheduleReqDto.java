@@ -1,4 +1,4 @@
-package project.movie.movie.dto;
+package project.movie.theater.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

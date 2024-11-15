@@ -1,13 +1,13 @@
-package project.movie.movie.service;
+package project.movie.theater.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.movie.movie.domain.Schedule;
-import project.movie.movie.dto.ScheduleResDto;
-import project.movie.movie.dto.ScheduleSaveDto;
-import project.movie.movie.dto.ScheduleReqDto;
-import project.movie.movie.repository.ScheduleRepository;
+import project.movie.theater.domain.Schedule;
+import project.movie.theater.dto.ScheduleResDto;
+import project.movie.theater.dto.ScheduleSaveDto;
+import project.movie.theater.dto.ScheduleReqDto;
+import project.movie.theater.repository.ScheduleRepository;
 
 import java.util.List;
 
