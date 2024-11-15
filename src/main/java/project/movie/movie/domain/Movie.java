@@ -20,6 +20,10 @@ import project.movie.movie.dto.MovieSyncDTO;
 
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Entity
@@ -160,5 +164,34 @@ public class Movie extends Base {
         this.endDate = movieDateGeneratorDTO.getEndDate();
 
         return this;
+    }
+
+
+    /***
+     사용 예시
+     List<Movie> movies = movieRepository.findMoviesByStatus(MovieStatus.POPULAR.name());
+
+     // 인기도로 오름차순 정렬
+     List<Movie> popularityAscending = MovieSorter.sortMoviesBy(movies, Movie::getPopularity, true);
+
+     // 제목으로 내림차순 정렬
+     List<Movie> titleDescending = MovieSorter.sortMoviesBy(movies, Movie::getTitle, false);
+
+     // 개봉일로 오름차순 정렬
+     List<Movie> releaseDateAscending = MovieSorter.sortMoviesBy(movies, Movie::getReleaseDate, true);
+
+     // 기존의 인기도 정렬 메서드도 그대로 사용 가능
+     List<Movie> popularityDescending = MovieSorter.sortMoviesByPopularityDescending(movies);
+     */
+    public static <T extends Comparable<? super T>> List<Movie> sortMoviesBy(List<Movie> movies, Function<Movie, T> keyExtractor, boolean ascending) {
+        Comparator<Movie> comparator = Comparator.comparing(keyExtractor);
+
+        if (!ascending) {
+            comparator = comparator.reversed();
+        }
+
+        return movies.stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 }
