@@ -1,10 +1,10 @@
-package project.movie.movie.repository;
+package project.movie.theater.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import project.movie.movie.domain.Schedule;
-import project.movie.movie.dto.ScheduleReqDto;
+import project.movie.theater.domain.Schedule;
+import project.movie.theater.dto.ScheduleReqDto;
 
 import java.util.List;
 

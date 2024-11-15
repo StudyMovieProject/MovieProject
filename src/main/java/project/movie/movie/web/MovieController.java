@@ -10,14 +10,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.movie.common.web.response.ResponseDto;
 import project.movie.movie.domain.Movie;
 import project.movie.movie.domain.MovieStatus;
+import project.movie.movie.dto.MovieWithWatchAbilityReqDto;
 import project.movie.movie.dto.MovieResDto;
+import project.movie.movie.dto.MovieWithWatchAbilityResDto;
 import project.movie.movie.service.MovieService;
 
 import java.util.List;
@@ -45,20 +44,46 @@ public class MovieController {
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })
     @GetMapping("/status/{status}")
-    public ResponseEntity<ResponseDto<List<MovieResDto>>> getMoviesByStatus(
+    public ResponseEntity<ResponseDto<List<MovieResDto>>> listByStatus(
             @PathVariable @Parameter(description = "영화 상태", schema = @Schema(allowableValues = {"POPULAR", "LATEST", "UPCOMING"})) String status) {
         log.info("영화 목록 조회 메서드 실행: {}", status);
 
-        try {
-            MovieStatus movieStatus = MovieStatus.valueOf(status.toUpperCase());
-            List<Movie> movies = movieService.getMoviesByStatus(movieStatus);
+//        try {
+        MovieStatus movieStatus = MovieStatus.valueOf(status.toUpperCase());
+        List<Movie> movies = movieService.getMoviesByStatus(movieStatus);
 
-            List<MovieResDto> movieRespDtos = movies.stream().map(MovieResDto::from).toList();
-            return ResponseEntity.ok(new ResponseDto<>(1, "영화 목록 조회 성공", movieRespDtos));
-        } catch (IllegalArgumentException e) {
-            log.warn("유효하지 않은 영화 상태: {}", status);
-            return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "유효하지 않은 영화 상태입니다.", null));
-        }
+        List<MovieResDto> movieRespDtos = movies.stream().map(MovieResDto::from).toList();
+        return ResponseEntity.ok(new ResponseDto<>(1, "영화 목록 조회 성공", movieRespDtos));
+//        } catch (IllegalArgumentException e) {
+//            log.warn("유효하지 않은 영화 상태: {}", status);
+//            return ResponseEntity.badRequest().body(new ResponseDto<>(-1, "유효하지 않은 영화 상태입니다.", null));
+//        }
+    }
+
+    /**
+     * 영화 목록 정보 조회. 영화 목록에 각 영화 별 예매 가능 여부 변수(isNotWatchable) 가 포함 되어 있음
+     *
+     * @param movieWithWatchAbilityReqDto {
+     *   bookingDate : 영화 예매 날짜
+     *   theaterId : 영화관 고유 번호
+     * }
+     *
+     * @return List
+     */
+    @Operation(summary = "예매 영화 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "영화 목록 조회 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
+    })
+    @GetMapping("/reservation")
+    public ResponseEntity<ResponseDto<List<MovieWithWatchAbilityResDto>>> listForReservationByDateAndTheater(
+            @RequestBody @Parameter(description = "예매 영화 목록 요청 객체") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto) {
+        log.info("getMoviesWithWatchAbilityDtoByDateAndTheater 메서드 실행: {}", movieWithWatchAbilityReqDto);
+
+        List<MovieWithWatchAbilityResDto> movieRespDtos = movieService.listForReservationByDateAndTheater(movieWithWatchAbilityReqDto);
+
+        return ResponseEntity.ok(new ResponseDto<>(1, "예매 영화 목록 조회 조회 성공", movieRespDtos));
     }
 
     // 인기 영화 목록 조회
@@ -95,6 +120,7 @@ public class MovieController {
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })
+
     @GetMapping("/{id}")
     public ResponseEntity<?> get(
             @PathVariable @Parameter(description = "영화 고유 번호", example = "1") Long id) {

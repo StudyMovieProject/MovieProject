@@ -1,4 +1,4 @@
-package project.movie.movie.sync;
+package project.movie.theater.sync;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import project.movie.movie.domain.Movie;
 import project.movie.movie.domain.MovieStatus;
-import project.movie.movie.dto.ScheduleSaveDto;
+import project.movie.theater.dto.ScheduleSaveDto;
 import project.movie.movie.repository.MovieRepository;
-import project.movie.movie.service.ScheduleService;
+import project.movie.theater.service.ScheduleService;
 import project.movie.theater.domain.Screen;
 import project.movie.theater.domain.Theater;
 import project.movie.theater.repository.ScreenRepository;
@@ -17,6 +17,7 @@ import project.movie.theater.repository.ScreenRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static project.movie.common.util.date.DateFormatUtil.convertToLocalDateToDate;
@@ -65,8 +66,8 @@ public class MovieTimetableDataMakeScheduler {
     private static final int MOVIE_BUFFER_INTERVAL = 20; // 분단위
     private static final LocalDate TODAY = LocalDate.now();
 
-    @Scheduled(cron = "20 * 4 * * ?")
 //    @Scheduled(fixedRate = 5000L)
+    @Scheduled(cron = "20 * 4 * * ?")
     public void makeMovieTimetableData() {
         log.info("[시작]] makeMovieTimetableData");
 
@@ -88,10 +89,13 @@ public class MovieTimetableDataMakeScheduler {
     private void createTimetableForScreen(Screen screen, List<Movie> movies) {
         Theater theater = screen.getTheater();
         Long screenId = Long.valueOf(screen.getScreenNumber()); // 스크린 Id
-        LocalTime startTime = THEATER_FIRST_MOVIE_PLAY_TIME.plusHours(screenId - 1);
+        LocalTime startTime = THEATER_FIRST_MOVIE_PLAY_TIME.plusHours(screenId- 1);
         LocalDateTime movieDateTime = LocalDateTime.of(TODAY, startTime);
 
+        // List<Movie> sortedMovies = getSortedMoviesForScreen(movies, screenId);
+
         // 영화 목록 순회
+        // for (Movie movie : sortedMovies) {
         for (Movie movie : movies) {
             // 영화관 마감 시간 체크
             if (isTheaterClosed(movieDateTime)) {
@@ -137,5 +141,13 @@ public class MovieTimetableDataMakeScheduler {
             }
         }
         return false;
+    }
+
+    private List<Movie> getSortedMoviesForScreen(List<Movie> movies, Long screenId) {
+        if (screenId % 2 == 0) {
+            return Movie.sortMoviesBy(movies, Movie::getPopularity, true);
+        } else {
+            return new ArrayList<>(movies);  // 홀수 스크린은 원래 순서 유지
+        }
     }
 }

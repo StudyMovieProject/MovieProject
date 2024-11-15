@@ -4,7 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import project.movie.movie.domain.Movie;
+import project.movie.movie.dto.MovieWithWatchAbilityReqDto;
+import project.movie.movie.dto.MovieWithWatchAbilityResDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,4 +40,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "case when ?1 = 'POPULAR' then m.popularity end desc, " +
             "case when ?1 = 'LATEST' then m.productDate end desc")
     List<Movie> findMoviesByStatus(String status);
+
+    @Query("SELECT new project.movie.movie.dto.MovieWithWatchAbilityResDto(m, " +
+                "CASE WHEN EXISTS (" +
+                "    SELECT 1 FROM Schedule s " +
+                "    WHERE s.movie = m " +
+                "    AND s.theater.id = :#{#paramMovie.theaterId} " +
+                "    AND s.scheduleDate = :#{#paramMovie.bookingDate}" +
+                ") THEN false ELSE true END as isNotWatchable) " +
+                "FROM Movie m")
+    List<MovieWithWatchAbilityResDto> listWithWatchAbilityDtoByDateAndTheater(@Param("paramMovie") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto);
 }

@@ -1,11 +1,12 @@
-package project.movie.movie.dto;
+package project.movie.theater.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import project.movie.movie.domain.Schedule;
+import project.movie.movie.dto.MovieResDto;
+import project.movie.theater.domain.Schedule;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
