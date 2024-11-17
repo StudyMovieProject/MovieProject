@@ -49,12 +49,18 @@ dependencies {
 //	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
 //	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
 
+	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+}
+
+bootJar {
+	mainClass = 'project.movie.MovieApplication'
+	archiveFileName = "MovieProject.jar"
 }
 
 tasks.named('test') {
