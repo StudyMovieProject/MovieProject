@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -76,10 +77,10 @@ public class MovieController {
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })
-    @GetMapping("/reservation")
-    public ResponseEntity<ResponseDto<List<MovieWithWatchAbilityResDto>>> listForReservationByDateAndTheater(
-            @RequestBody @Parameter(description = "예매 영화 목록 요청 객체") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto) {
-        log.info("getMoviesWithWatchAbilityDtoByDateAndTheater 메서드 실행: {}", movieWithWatchAbilityReqDto);
+    @GetMapping("/available")
+    public ResponseEntity<ResponseDto<List<MovieWithWatchAbilityResDto>>> listAvailableMovies(
+            @RequestBody @Valid @Parameter(description = "예매 영화 목록 요청 객체") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto) {
+        log.info("listAvailableMovies 메서드 실행: {}", movieWithWatchAbilityReqDto);
 
         List<MovieWithWatchAbilityResDto> movieRespDtos = movieService.listForReservationByDateAndTheater(movieWithWatchAbilityReqDto);
 

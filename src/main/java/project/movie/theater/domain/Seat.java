@@ -2,6 +2,7 @@ package project.movie.theater.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -12,35 +13,39 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Seat {
-    @Schema(description = "좌석코드", required = true, example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seat_id")
-    private Integer id;
+    private Long id;
 
-    @Schema(description = "상영관 코드", required = true, example = "1")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "screen_id")
     private Screen screen;
 
-    @Schema(description = "영화관 코드", required = true, example = "1")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theater_id")
     private Theater theater;
 
-    @Schema(description = "좌석 그룹", required = true, example = "A")
     @Column(name = "seat_group", length = 10)
     private String seatGroup;
 
-    @Schema(description = "좌석 번호", required = true, example = "1")
     @Column(name = "seat_no")
     private Integer seatNo;
 
-    @Schema(description = "좌석 줄번호", required = true, example = "1")
     @Column(name = "seat_line_no")
     private Integer seatLineNo;
 
     @Transient
-    @Schema(description = "예매 가능 여부", required = true, example = "true | false")
-    private Boolean isBookable; // 예매 가능 여부
+    private Boolean isBookable;
+
+    @Builder
+    public Seat(Long id, Screen screen, Theater theater, String seatGroup, Integer seatNo, Integer seatLineNo, Boolean isBookable) {
+        this.id = id;
+        this.screen = screen;
+        this.theater = theater;
+        this.seatGroup = seatGroup;
+        this.seatNo = seatNo;
+        this.seatLineNo = seatLineNo;
+        this.isBookable = isBookable;
+    }
 }

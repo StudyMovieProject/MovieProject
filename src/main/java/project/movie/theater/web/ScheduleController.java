@@ -45,7 +45,7 @@ public class ScheduleController {
 //            log.error("[ERROR] ScheduleService > listByDateAndTheaterAndMovie: {}", e.getMessage());
 //            return ResponseEntity.ok(new ResponseDto<>(-1, "스케쥴 목록 조회 실패", null));
 //        }
-        return ResponseEntity.ok(new ResponseDto<>(1, "영화 상영 스케쥴 정보 성공", schduleResDtoList));
+        return ResponseEntity.ok(new ResponseDto<>(1, "영화 상영 스케쥴 정보 조회 성공", schduleResDtoList));
     }
 
 
