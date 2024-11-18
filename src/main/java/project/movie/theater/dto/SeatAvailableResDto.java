@@ -1,5 +1,6 @@
 package project.movie.theater.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,17 +10,22 @@ import project.movie.theater.domain.Seat;
 @Getter
 @Setter
 @ToString
-@Builder
 public class SeatAvailableResDto {
-    private Seat seat;
-    private boolean isNotAvailable;
+    @Schema(description = "좌석 정보", required = true)
+    private SeatResDto seatResDto;
+    @Schema(description = "예매 불가능 여부", required = true, example = "true | false")
+    private boolean isAvailable;
 
-    public SeatAvailableResDto(Seat seat) {
-        this.seat = seat;
+    @Builder
+    public SeatAvailableResDto(Seat seat, boolean isAvailable) {
+        this.seatResDto = SeatResDto.from(seat);
+        this.isAvailable = isAvailable;
     }
 
-    public SeatAvailableResDto(Seat seat, boolean isNotAvailable) {
-        this.seat = seat;
-        this.isNotAvailable = isNotAvailable;
+    public static SeatAvailableResDto from(Seat seat) {
+        return SeatAvailableResDto.builder()
+                .seat(seat)
+                .isAvailable(!seat.getIsBookable())
+                .build();
     }
 }

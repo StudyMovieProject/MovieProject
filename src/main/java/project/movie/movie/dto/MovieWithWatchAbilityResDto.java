@@ -12,14 +12,14 @@ import project.movie.movie.domain.Movie;
 @NoArgsConstructor
 public class MovieWithWatchAbilityResDto {
     private Movie movie;
-    private boolean isNotWatchable;
+    private boolean isWatchable;
 
     public MovieWithWatchAbilityResDto(Movie movie) {
         this.movie = movie;
     }
 
-    public MovieWithWatchAbilityResDto(Movie movie, boolean isNotWatchable) {
+    public MovieWithWatchAbilityResDto(Movie movie, boolean isWatchable) {
         this.movie = movie;
-        this.isNotWatchable = isNotWatchable;
+        this.isWatchable = isWatchable;
     }
 }

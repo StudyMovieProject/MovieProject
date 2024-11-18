@@ -20,9 +20,9 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
             "    AND sc.scheduleDate = :#{#paramSeat.scheduleDate} " +
             "    AND sc.startAt = :#{#paramSeat.startAt} " +
             "    AND r.seat.id = se.id " +
-            ") THEN true ELSE false END as isReserved) " +
+            ") THEN false ELSE true END as isAvailable) " +
             "FROM Seat se " +
             "WHERE se.theater.id = :#{#paramSeat.theaterId} " +
             "AND se.screen.id = :#{#paramSeat.screenId}")
-    List<SeatAvailableResDto> listAvailable(@Param("paramSeat") SeatReqDto seatReqDto);
+    List<SeatAvailableResDto> findAvailableSeatsByTheaterAndScreenAndSchedule(@Param("paramSeat") SeatReqDto seatReqDto);
 }

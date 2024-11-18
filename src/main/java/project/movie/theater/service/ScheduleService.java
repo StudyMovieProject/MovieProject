@@ -25,8 +25,8 @@ public class ScheduleService {
     }
 
     @Transactional
-    public List<ScheduleResDto> listByDateAndTheaterAndMovie(ScheduleReqDto scheduleReqDto) {
-        List<Schedule> schedules = scheduleRepository.listByDateAndTheaterAndMovie(scheduleReqDto);
+    public List<ScheduleResDto> findShowTimes(ScheduleReqDto scheduleReqDto) {
+        List<Schedule> schedules = scheduleRepository.findShowTimesByDateAndTheaterAndMovie(scheduleReqDto);
         return schedules.stream().map(ScheduleResDto::from).toList();
     }
 

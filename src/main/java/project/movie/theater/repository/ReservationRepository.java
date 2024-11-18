@@ -38,7 +38,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //            "    WHERE s.movie = m " +
 //            "    AND s.theater.id = :#{#paramMovie.theaterId} " +
 //            "    AND s.scheduleDate = :#{#paramMovie.bookingDate}" +
-//            ") THEN false ELSE true END as isNotWatchable) " +
+//            ") THEN false ELSE true END as isAvailable) " +
 //            "FROM Movie m")
 //    List<MovieWithWatchAbilityResDto> listWithWatchAbilityDtoByDateAndTheater(@Param("paramMovie") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto);
 }
