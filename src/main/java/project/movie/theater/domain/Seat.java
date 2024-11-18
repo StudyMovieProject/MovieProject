@@ -1,11 +1,13 @@
 package project.movie.theater.domain;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import project.movie.theater.dto.ScreenResDto;
+import project.movie.theater.dto.SeatResDto;
+import project.movie.theater.dto.TheaterResDto;
 
 @NoArgsConstructor
 @Table(name = "seats")
@@ -47,5 +49,17 @@ public class Seat {
         this.seatNo = seatNo;
         this.seatLineNo = seatLineNo;
         this.isBookable = isBookable;
+    }
+
+    public static SeatResDto from(Seat seat) {
+        return SeatResDto.builder()
+                .id(seat.getId())
+                .screenResDto(ScreenResDto.from(seat.getScreen()))
+                .theaterResDto(TheaterResDto.from(seat.getTheater()))
+                .seatGroup(seat.getSeatGroup())
+                .seatNo(seat.getSeatNo())
+                .seatLineNo(seat.getSeatLineNo())
+                .isBookable(seat.isBookable)
+                .build();
     }
 }

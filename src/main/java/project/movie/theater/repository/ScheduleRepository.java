@@ -11,5 +11,5 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("select s from Schedule s where s.theater.id = :#{#paramScheduler.theaterId} and s.movie.id = :#{#paramScheduler.movieId} and s.scheduleDate = date(:#{#paramScheduler.bookingDate})")
-    List<Schedule> listByDateAndTheaterAndMovie(@Param("paramScheduler") ScheduleReqDto scheduleReqDto);
+    List<Schedule> findShowTimesByDateAndTheaterAndMovie(@Param("paramScheduler") ScheduleReqDto scheduleReqDto);
 }

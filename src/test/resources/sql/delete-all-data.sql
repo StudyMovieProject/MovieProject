@@ -1,1 +1,2 @@
-delete from `members` where 1;
+delete from `reservations` where 1;
+delete from `schedules` where 1;

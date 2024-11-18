@@ -25,27 +25,27 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @Operation(summary = "영화 상영 스케쥴 정보")
+    @Operation(summary = "영화 상영 시간표 정보")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "영화 상영 스케쥴 정보 조회 성공",
+            @ApiResponse(responseCode = "200", description = "영화 상영 시간표 정보 조회 성공",
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })
     @GetMapping
-    public ResponseEntity<ResponseDto<List<ScheduleResDto>>> listByDateAndTheaterAndMovie(
-            @Parameter(description = "영화 상영 스케쥴 정보 요청 DTO") @RequestBody ScheduleReqDto scheduleReqDto) {
+    public ResponseEntity<ResponseDto<List<ScheduleResDto>>> listShowTimes(
+            @Parameter(description = "영화 상영 시간표 정보 요청 DTO") @RequestBody ScheduleReqDto scheduleReqDto) {
         List<ScheduleResDto> schduleResDtoList = null;
 //        try {
         log.info("ScheduleService > listByDateAndTheaterAndMovie START: {}", scheduleReqDto);
 
-        schduleResDtoList = scheduleService.listByDateAndTheaterAndMovie(scheduleReqDto);
+        schduleResDtoList = scheduleService.findShowTimes(scheduleReqDto);
 
         log.info("ScheduleService > listByDateAndTheaterAndMovie END: {}", scheduleReqDto);
 //        } catch (Exception e) {
 //            log.error("[ERROR] ScheduleService > listByDateAndTheaterAndMovie: {}", e.getMessage());
-//            return ResponseEntity.ok(new ResponseDto<>(-1, "스케쥴 목록 조회 실패", null));
+//            return ResponseEntity.ok(new ResponseDto<>(-1, "시간표 목록 조회 실패", null));
 //        }
-        return ResponseEntity.ok(new ResponseDto<>(1, "영화 상영 스케쥴 정보 조회 성공", schduleResDtoList));
+        return ResponseEntity.ok(new ResponseDto<>(1, "영화 상영 시간표 정보 조회 성공", schduleResDtoList));
     }
 
 

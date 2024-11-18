@@ -18,8 +18,8 @@ public class SeatService {
     private final SeatRepository seatRepository;
 
     @Transactional(readOnly = true)
-    public List<SeatAvailableResDto> listAvailable(SeatReqDto seatReqDto) {
-        return seatRepository.listAvailable(seatReqDto);
+    public List<SeatAvailableResDto> findAvailableSeats(SeatReqDto seatReqDto) {
+        return seatRepository.findAvailableSeatsByTheaterAndScreenAndSchedule(seatReqDto);
     }
 
     @Transactional

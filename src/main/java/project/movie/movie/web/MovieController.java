@@ -62,7 +62,7 @@ public class MovieController {
     }
 
     /**
-     * 영화 목록 정보 조회. 영화 목록에 각 영화 별 예매 가능 여부 변수(isNotWatchable) 가 포함 되어 있음
+     * 영화 목록 정보 조회. 영화 목록에 각 영화 별 상영 가능 여부 변수(isWatchable) 가 포함 되어 있음
      *
      * @param movieWithWatchAbilityReqDto {
      *   bookingDate : 영화 예매 날짜
