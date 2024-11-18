@@ -33,7 +33,7 @@ public class TheaterController {
     @GetMapping
     public ResponseEntity<ResponseDto<List<TheaterResDto>>> list() {
         log.info("TheaterController > list START");
-        List<TheaterResDto> list = theaterService.list();
+        List<TheaterResDto> list = theaterService.findAll();
         log.info("TheaterController > list END");
         return ResponseEntity.ok(new ResponseDto<>(1, "영화관 목록 정보 조회 성공", list));
     }

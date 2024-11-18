@@ -1,6 +1,5 @@
 package project.movie.theater.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +11,6 @@ import project.movie.theater.dto.TheaterResDto;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +25,7 @@ class TheaterServiceTest {
     public void theater_print_test() throws Exception {
         // given
         // when
-        List<TheaterResDto> list = theaterService.list();
+        List<TheaterResDto> list = theaterService.findAll();
 
         // then
         assertThat(list).hasSizeGreaterThan(0);

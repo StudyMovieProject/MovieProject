@@ -82,7 +82,7 @@ public class MovieController {
             @RequestBody @Valid @Parameter(description = "예매 영화 목록 요청 객체") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto) {
         log.info("listAvailableMovies 메서드 실행: {}", movieWithWatchAbilityReqDto);
 
-        List<MovieWithWatchAbilityResDto> movieRespDtos = movieService.listForReservationByDateAndTheater(movieWithWatchAbilityReqDto);
+        List<MovieWithWatchAbilityResDto> movieRespDtos = movieService.findAvailableMovies(movieWithWatchAbilityReqDto);
 
         return ResponseEntity.ok(new ResponseDto<>(1, "예매 영화 목록 조회 조회 성공", movieRespDtos));
     }
@@ -90,8 +90,8 @@ public class MovieController {
     // 인기 영화 목록 조회
     @Deprecated
     @GetMapping("/popular")
-    public ResponseEntity<?> listPopular() {
-        List<Movie> popularMovies = movieService.getPopularMovies();
+    public ResponseEntity<?> listPopularMovies() {
+        List<Movie> popularMovies = movieService.findPopularMovies();
         List<MovieResDto> movieRespDtos = popularMovies.stream().map(MovieResDto::from).toList();
         return new ResponseEntity<>(new ResponseDto<>(1, "박스 오피스 영화 목록 조회 성공", movieRespDtos), HttpStatus.OK);
     }
@@ -99,8 +99,8 @@ public class MovieController {
     // 최신 영화 목록 조회
     @Deprecated
     @GetMapping("/latest")
-    public ResponseEntity<?> listLatest() {
-        List<Movie> popularMovies = movieService.getLatestMovies();
+    public ResponseEntity<?> listLatestMovies() {
+        List<Movie> popularMovies = movieService.findLatestMovies();
         List<MovieResDto> movieRespDtos = popularMovies.stream().map(MovieResDto::from).toList();
         return new ResponseEntity<>(new ResponseDto<>(1, "박스 오피스 영화 목록 조회 성공", movieRespDtos), HttpStatus.OK);
     }
@@ -108,8 +108,8 @@ public class MovieController {
     // 예정 영화 목록 조회
     @Deprecated
     @GetMapping("/upcoming")
-    public ResponseEntity<?> listUpcoming() {
-        List<Movie> popularMovies = movieService.getUpcomingMovies();
+    public ResponseEntity<?> listUpcomingMovies() {
+        List<Movie> popularMovies = movieService.findUpcomingMovies();
         List<MovieResDto> movieRespDtos = popularMovies.stream().map(MovieResDto::from).toList();
         return new ResponseEntity<>(new ResponseDto<>(1, "박스 오피스 영화 목록 조회 성공", movieRespDtos), HttpStatus.OK);
     }

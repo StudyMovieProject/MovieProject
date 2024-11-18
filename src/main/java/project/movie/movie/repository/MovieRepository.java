@@ -49,5 +49,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                 "    AND s.scheduleDate = :#{#paramMovie.bookingDate}" +
                 ") THEN true ELSE false END as isWatchable) " +
                 "FROM Movie m")
-    List<MovieWithWatchAbilityResDto> listWithWatchAbilityDtoByDateAndTheater(@Param("paramMovie") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto);
+    List<MovieWithWatchAbilityResDto> findAvailableMoviesByTheaterAndDate(@Param("paramMovie") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto);
 }

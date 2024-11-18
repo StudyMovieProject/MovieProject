@@ -17,7 +17,7 @@ public class TheaterService {
     private final TheaterRepository theaterRepository;
 
     @Transactional(readOnly = true)
-    public List<TheaterResDto> list() {
+    public List<TheaterResDto> findAll() {
         List<TheaterResDto> theaterResList = null;
 
         List<Theater> theaterList = theaterRepository.findAll();
