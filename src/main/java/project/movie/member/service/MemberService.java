@@ -23,8 +23,6 @@ public class MemberService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final BCryptPasswordEncoder passwordEncoder;
-
     @Transactional
     public MemberRespDto create(MemberSaveReqDto memberSaveReqDto) {
         // 1. 동일한 유저 이름 존재 검사

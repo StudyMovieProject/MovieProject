@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
@@ -133,11 +135,12 @@ class MemberControllerTest extends DummyObject {
         resultActions.andExpect(status().isBadRequest());
         resultActions.andExpect(jsonPath("$.data.email").value("이메일 형식으로 작성해주세요"));
         resultActions.andExpect(jsonPath("$.data.password").value("size must be between 4 and 20"));
-        resultActions.andExpect(jsonPath("$.data.tel").value("연락처 형식으로 작성해주세요"));
+        resultActions.andExpect(jsonPath("$.data.tel").value("연락처는 '010'으로 시작하고 뒤에 8자리 숫자로 작성해주세요."));
     }
 
     @Test
     @DisplayName("멤버 수정 테스트")
+    @WithUserDetails(value = "net1506", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     public void member_update_test() throws Exception {
 
         // given
@@ -157,7 +160,7 @@ class MemberControllerTest extends DummyObject {
 
         // when
         // then
-        mockMvc.perform(put("/api/members/update/me")
+        mockMvc.perform(put("/api/me/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(memberUpdateReqDto))
                         .header("Authorization", DummyObject.generateJwtToken(jwtUtil)))
@@ -167,12 +170,14 @@ class MemberControllerTest extends DummyObject {
 
     @Test
     @DisplayName("멤버 삭제 테스트")
+    @WithUserDetails(value = "net1506", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     public void user_delete_test() throws Exception {
         // given
         // when
         // then
-        mockMvc.perform(delete("/api/members/delete/me")
-                .header("Authorization", DummyObject.generateJwtToken(jwtUtil)))
+        mockMvc.perform(delete("/api/me/delete")
+                .header("Authorization", DummyObject.generateJwtToken(jwtUtil))
+                .param("password", "1234"))
                 .andExpect(status().isOk());
     }
 

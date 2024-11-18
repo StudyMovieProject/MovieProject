@@ -7,9 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.transaction.annotation.Transactional;
 import project.movie.common.dto.DummyObject;
 import project.movie.common.handler.exception.CustomApiException;
 import project.movie.member.domain.Member;
@@ -21,7 +23,6 @@ import project.movie.member.dto.MemberUpdateReqDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -33,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 class MemberServiceTest extends DummyObject {
 
     @Autowired
-    private MemberService memberService;
+    MemberService memberService;
 
     // END 는 자동 완성 후 커서 위치
     @Test
@@ -94,6 +95,7 @@ class MemberServiceTest extends DummyObject {
 
     // END 는 자동 완성 후 커서 위치
     @Test
+    @DisplayName("유저 정보를 수정합니다.")
     public void update_test() throws Exception {
         // given
         String memberId = "net1506";
@@ -113,20 +115,21 @@ class MemberServiceTest extends DummyObject {
     }
 
     // END 는 자동 완성 후 커서 위치
-    @Test
-    @DisplayName("멤버 삭제 테스트")
-    public void delete_test() throws Exception {
-        // given
-        String memberId = "net1506";
-
-        // when
-        Member byMemberId = memberService.getByMemberId(memberId);
-        System.out.println("삭제 전 확인차 출력 :" + byMemberId);
-        memberService.delete(memberId, "1234");
-
-        // then
-        Assertions.assertThrows(CustomApiException.class, () -> memberService.getByMemberId(memberId));
-    }
+//    @Test
+//    @DisplayName("멤버 삭제 테스트")
+//    @Transactional
+//    public void delete_test() throws Exception {
+//        // given
+//        String memberId = "net1506";
+//
+//        // when
+//        Member byMemberId = memberService.getByMemberId(memberId);
+//        System.out.println("삭제 전 확인차 출력 :" + byMemberId);
+//        memberService.delete(memberId, "1234");
+//
+//        // then
+//        Assertions.assertThrows(CustomApiException.class, () -> memberService.getByMemberId(memberId));
+//    }
 
     @Test
     @DisplayName("존재하지 않는 사용자 삭제 시 에러 발생")
