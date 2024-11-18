@@ -7,22 +7,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.transaction.annotation.Transactional;
 import project.movie.common.dto.DummyObject;
-import project.movie.common.util.date.DateFormatUtil;
-import project.movie.movie.domain.Movie;
-import project.movie.movie.domain.MovieStatus;
 import project.movie.movie.dto.MovieWithWatchAbilityReqDto;
 import project.movie.movie.dto.MovieWithWatchAbilityResDto;
 import project.movie.movie.repository.MovieRepository;
 
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @ActiveProfiles("test")
@@ -136,7 +130,7 @@ class MovieServiceTest extends DummyObject {
         MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto = new MovieWithWatchAbilityReqDto();
         movieWithWatchAbilityReqDto.setBookingDate(LocalDate.now());
         movieWithWatchAbilityReqDto.setTheaterId("2");
-        List<MovieWithWatchAbilityResDto> movieWithWatchAbilityResDtos = movieService.listForReservationByDateAndTheater(movieWithWatchAbilityReqDto);
+        List<MovieWithWatchAbilityResDto> movieWithWatchAbilityResDtos = movieService.findAvailableMovies(movieWithWatchAbilityReqDto);
 
         // when
         MovieWithWatchAbilityResDto movieWithWatchAbilityResDtoNotWatchable = movieWithWatchAbilityResDtos.get(19);

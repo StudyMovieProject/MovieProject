@@ -46,15 +46,15 @@ public class MovieService {
                 .orElseThrow(() -> new CustomApiException(movieId + " 는 존재하지 않는 영화 ID 입니다"));
     }
 
-    public List<Movie> getPopularMovies() {
+    public List<Movie> findPopularMovies() {
         return movieRepository.findPopularMovies();
     }
 
-    public List<Movie> getLatestMovies() {
+    public List<Movie> findLatestMovies() {
         return movieRepository.findLatestMovies();
     }
 
-    public List<Movie> getUpcomingMovies() {
+    public List<Movie> findUpcomingMovies() {
         return movieRepository.findUpcomingMovies();
     }
 
@@ -62,8 +62,8 @@ public class MovieService {
         return movieRepository.findMoviesByStatus(status.name());
     }
 
-    public List<MovieWithWatchAbilityResDto> listForReservationByDateAndTheater(MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto) {
-        return movieRepository.listWithWatchAbilityDtoByDateAndTheater(movieWithWatchAbilityReqDto);
+    public List<MovieWithWatchAbilityResDto> findAvailableMovies(MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto) {
+        return movieRepository.findAvailableMoviesByTheaterAndDate(movieWithWatchAbilityReqDto);
     }
 
     public Page<Movie> getMoviesPage(String criteria, String sort) {
