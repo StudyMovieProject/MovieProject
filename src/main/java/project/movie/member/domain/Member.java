@@ -95,6 +95,10 @@ public class Member extends Base {
 
     public boolean validatePassword(String inputPassword, BCryptPasswordEncoder bCryptPasswordEncoder) {
         // 입력된 평문 패스워드와 이미 암호화된 패스워드를 비교
-        return bCryptPasswordEncoder.matches(inputPassword, this.password);
+        boolean isValid = bCryptPasswordEncoder.matches(inputPassword, this.password);
+//        System.out.println("Input password: " + inputPassword);
+//        System.out.println("Stored password: " + this.password);
+//        System.out.println("Is valid: " + isValid);
+        return isValid;
     }
 }
