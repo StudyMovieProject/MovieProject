@@ -98,8 +98,8 @@ class SeatServiceTest {
         SeatReqDto seatReqDto = SeatReqDto.builder()
                 .theaterId(2L)
                 .screenId(3L)
-                .scheduleDate(LocalDate.of(2024, 11, 18))
-                .startAt(LocalTime.of(7, 30))
+                .scheduleDate(LocalDate.now().toString())
+                .startAt("07:30")
                 .build();
 
         // when

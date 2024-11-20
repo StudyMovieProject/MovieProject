@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import project.movie.common.web.response.ResponseDto;
 import project.movie.member.domain.Member;
@@ -67,9 +68,9 @@ public class MyInfoController {
         return new ResponseEntity<>(new ResponseDto<>(1, "비밀번호 변경 성공", null), HttpStatus.OK);
     }
 
-    @Operation(summary = "로그인 사용자 비밀번호 삭제")
+    @Operation(summary = "로그인 사용자 삭제")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그인 사용자 비밀번호 삭제 성공",
+            @ApiResponse(responseCode = "200", description = "로그인 사용자 삭제 성공",
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })

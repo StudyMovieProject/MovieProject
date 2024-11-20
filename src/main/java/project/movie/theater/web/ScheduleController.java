@@ -33,7 +33,7 @@ public class ScheduleController {
     })
     @GetMapping
     public ResponseEntity<ResponseDto<List<ScheduleResDto>>> listShowTimes(
-            @Parameter(description = "영화 상영 시간표 정보 요청 DTO") @RequestBody ScheduleReqDto scheduleReqDto) {
+            @Parameter(description = "영화 상영 시간표 정보 요청 DTO") ScheduleReqDto scheduleReqDto) {
         List<ScheduleResDto> schduleResDtoList = null;
 //        try {
         log.info("ScheduleService > listByDateAndTheaterAndMovie START: {}", scheduleReqDto);

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.movie.member.service.MemberService;
 import project.movie.theater.domain.Reservation;
+import project.movie.theater.dto.ReservationResDto;
 import project.movie.theater.dto.ReservationSaveReqDto;
 import project.movie.theater.repository.ReservationRepository;
 
@@ -17,8 +18,9 @@ public class ReservationService {
     private final SeatService seatService;
 
     @Transactional
-    public Reservation create(ReservationSaveReqDto reservationSaveReqDto) {
-        return reservationRepository.save(reservationSaveReqDto.to(memberService, scheduleService, seatService));
+    public ReservationResDto create(ReservationSaveReqDto reservationSaveReqDto) {
+        Reservation reservation = reservationRepository.save(reservationSaveReqDto.to(memberService, scheduleService, seatService));
+        return ReservationResDto.from(reservation);
     }
 
     @Transactional

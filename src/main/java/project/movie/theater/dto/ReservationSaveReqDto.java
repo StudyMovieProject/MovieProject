@@ -73,7 +73,7 @@ public class ReservationSaveReqDto {
                 .paymentMethod(PaymentMethod.valueOf(paymentMethod))
                 .cardNumber(cardNumber)
                 .isPaymentConfirmed(isPaymentConfirmed)
-                .paidAt(paidAt)
+                .paidAt(LocalDateTime.now())
                 .build();
     }
 

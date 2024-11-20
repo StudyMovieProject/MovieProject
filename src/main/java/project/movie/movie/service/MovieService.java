@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import project.movie.common.handler.exception.CustomApiException;
 import project.movie.movie.domain.Movie;
 import project.movie.movie.domain.MovieStatus;
-import project.movie.movie.dto.MovieWithWatchAbilityReqDto;
+import project.movie.movie.dto.MovieAvailableReqDto;
 import project.movie.movie.dto.MovieResDto;
-import project.movie.movie.dto.MovieWithWatchAbilityResDto;
+import project.movie.movie.dto.MovieAvailableResDto;
 import project.movie.movie.repository.MovieRepository;
 
 import java.util.List;
@@ -62,8 +62,8 @@ public class MovieService {
         return movieRepository.findMoviesByStatus(status.name());
     }
 
-    public List<MovieWithWatchAbilityResDto> findAvailableMovies(MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto) {
-        return movieRepository.findAvailableMoviesByTheaterAndDate(movieWithWatchAbilityReqDto);
+    public List<MovieAvailableResDto> findAvailableMovies(MovieAvailableReqDto movieAvailableReqDto) {
+        return movieRepository.findAvailableMoviesByTheaterAndDate(movieAvailableReqDto);
     }
 
     public Page<Movie> getMoviesPage(String criteria, String sort) {

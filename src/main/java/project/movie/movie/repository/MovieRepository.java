@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import project.movie.movie.domain.Movie;
-import project.movie.movie.dto.MovieWithWatchAbilityReqDto;
-import project.movie.movie.dto.MovieWithWatchAbilityResDto;
+import project.movie.movie.dto.MovieAvailableReqDto;
+import project.movie.movie.dto.MovieAvailableResDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,13 +41,13 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "case when ?1 = 'LATEST' then m.productDate end desc")
     List<Movie> findMoviesByStatus(String status);
 
-    @Query("SELECT new project.movie.movie.dto.MovieWithWatchAbilityResDto(m, " +
+    @Query("SELECT new project.movie.movie.dto.MovieAvailableResDto(m, " +
                 "CASE WHEN EXISTS (" +
                 "    SELECT 1 FROM Schedule s " +
                 "    WHERE s.movie = m " +
                 "    AND s.theater.id = :#{#paramMovie.theaterId} " +
-                "    AND s.scheduleDate = :#{#paramMovie.bookingDate}" +
+                "    AND s.scheduleDate = :#{#paramMovie.getBookingDateAsLocalDate()}" +
                 ") THEN true ELSE false END as isWatchable) " +
                 "FROM Movie m")
-    List<MovieWithWatchAbilityResDto> findAvailableMoviesByTheaterAndDate(@Param("paramMovie") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto);
+    List<MovieAvailableResDto> findAvailableMoviesByTheaterAndDate(@Param("paramMovie") MovieAvailableReqDto movieAvailableReqDto);
 }

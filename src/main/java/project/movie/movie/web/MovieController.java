@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import project.movie.common.web.response.ResponseDto;
 import project.movie.movie.domain.Movie;
 import project.movie.movie.domain.MovieStatus;
-import project.movie.movie.dto.MovieWithWatchAbilityReqDto;
+import project.movie.movie.dto.MovieAvailableReqDto;
 import project.movie.movie.dto.MovieResDto;
-import project.movie.movie.dto.MovieWithWatchAbilityResDto;
+import project.movie.movie.dto.MovieAvailableResDto;
 import project.movie.movie.service.MovieService;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class MovieController {
     /**
      * 영화 목록 정보 조회. 영화 목록에 각 영화 별 상영 가능 여부 변수(isWatchable) 가 포함 되어 있음
      *
-     * @param movieWithWatchAbilityReqDto {
+     * @param movieAvailableReqDto {
      *   bookingDate : 영화 예매 날짜
      *   theaterId : 영화관 고유 번호
      * }
@@ -77,12 +77,12 @@ public class MovieController {
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })
-    @GetMapping("/available")
-    public ResponseEntity<ResponseDto<List<MovieWithWatchAbilityResDto>>> listAvailableMovies(
-            @RequestBody @Valid @Parameter(description = "예매 영화 목록 요청 객체") MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto) {
-        log.info("listAvailableMovies 메서드 실행: {}", movieWithWatchAbilityReqDto);
+    @PostMapping("/available")
+    public ResponseEntity<ResponseDto<List<MovieAvailableResDto>>> listAvailableMovies(
+           @RequestBody @Valid @Parameter(description = "예매 영화 목록 요청 객체") MovieAvailableReqDto movieAvailableReqDto) {
+        log.info("listAvailableMovies 메서드 실행: {}", movieAvailableReqDto);
 
-        List<MovieWithWatchAbilityResDto> movieRespDtos = movieService.findAvailableMovies(movieWithWatchAbilityReqDto);
+        List<MovieAvailableResDto> movieRespDtos = movieService.findAvailableMovies(movieAvailableReqDto);
 
         return ResponseEntity.ok(new ResponseDto<>(1, "예매 영화 목록 조회 조회 성공", movieRespDtos));
     }
