@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import project.movie.auth.jwt.dto.CustomUserDetails;
 import project.movie.auth.jwt.service.CustomUserDetailsService;
 import project.movie.board.domain.Board;
@@ -31,6 +33,7 @@ import project.movie.member.dto.MemberRespDto;
 import project.movie.member.service.MemberService;
 import project.movie.common.web.response.ResponseDto;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,7 +100,7 @@ public class BoardController {
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "로그인 후 작성하세요"),
     })
-    public ResponseEntity<?> writeList(@RequestBody BoardReqDto requestsDto,@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> writeList(@RequestBody BoardReqDto requestsDto, @AuthenticationPrincipal UserDetails userDetails) {
         if(userDetails==null){
             throw new CustomApiException("로그인 후 작성하세요");
         }
@@ -108,19 +111,35 @@ public class BoardController {
 
     }
 
+    @Operation(summary = "게시물 작성 첨부파일 포함")
+    @RequestMapping(value = "/writeFile", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "게시물 작성 성공",
+                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+            @ApiResponse(responseCode = "403", description = "로그인 후 작성하세요"),
+    })
+    public ResponseEntity<?> writeListFile(BoardReqDto requestsDto, @AuthenticationPrincipal UserDetails userDetails ,@RequestParam("file")MultipartFile file) throws IOException {
+        if(userDetails==null){
+            throw new CustomApiException("로그인 후 작성하세요");
+        }
+
+        BoardRespDto boardRespDto = boardService.writeListFile(requestsDto,userDetails.getUsername(),file);
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시물 작성 성공", boardRespDto), HttpStatus.OK);
+
+    }
 
     //선택 게시물 수정
-    @Operation(summary = "선택한 게시물 수정")
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "게시물 수정 성공",
-                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
-            @ApiResponse(responseCode = "403", description = "로그인 후 수정하세요"),
-    })
-    public ResponseEntity<?> updateList(@PathVariable int id, @RequestBody BoardReqDto requestsDto )throws Exception{
-        boardService.updateList(id, requestsDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시물 수정 성공", requestsDto), HttpStatus.OK);
-    }
+//    @Operation(summary = "선택한 게시물 수정")
+//    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "201", description = "게시물 수정 성공",
+//                    content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
+//            @ApiResponse(responseCode = "403", description = "로그인 후 수정하세요"),
+//    })
+//    public ResponseEntity<?> updateList(@PathVariable int id, @RequestBody BoardReqDto requestsDto )throws Exception{
+//        boardService.updateList(id, requestsDto);
+//        return new ResponseEntity<>(new ResponseDto<>(1, "게시물 수정 성공", requestsDto), HttpStatus.OK);
+//    }
 
     //선택한 게시물 삭제
     @Operation(summary = "선택한 게시물 삭제 ")
