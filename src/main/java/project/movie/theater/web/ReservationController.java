@@ -36,8 +36,8 @@ public class ReservationController {
     public ResponseEntity<?> create(
             @RequestBody @Valid @Parameter(description = "영화 예매 요청 객체") ReservationSaveReqDto reservationSaveReqDto, BindingResult bindingResult) {
         log.info("ReservationController create 메서드 실행");
-        Reservation reservation = reservationService.create(reservationSaveReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "영화 예매 성공", ReservationResDto.from(reservation)), HttpStatus.CREATED);
+        ReservationResDto reservationResDto = reservationService.create(reservationSaveReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "영화 예매 성공", reservationResDto), HttpStatus.CREATED);
     }
 
     @Operation(summary = "예약 결재 여부 변경")

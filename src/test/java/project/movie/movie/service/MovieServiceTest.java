@@ -12,11 +12,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.transaction.annotation.Transactional;
 import project.movie.common.dto.DummyObject;
-import project.movie.movie.dto.MovieWithWatchAbilityReqDto;
-import project.movie.movie.dto.MovieWithWatchAbilityResDto;
+import project.movie.movie.dto.MovieAvailableReqDto;
+import project.movie.movie.dto.MovieAvailableResDto;
 import project.movie.movie.repository.MovieRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @ActiveProfiles("test")
@@ -127,17 +126,17 @@ class MovieServiceTest extends DummyObject {
     @DisplayName("영화 스케쥴이 존재/비존재 시 isWatchable(상영 가능) 변수 테스트")
     public void list_available_movie_test() throws Exception {
         // given
-        MovieWithWatchAbilityReqDto movieWithWatchAbilityReqDto = new MovieWithWatchAbilityReqDto();
-        movieWithWatchAbilityReqDto.setBookingDate(LocalDate.now());
-        movieWithWatchAbilityReqDto.setTheaterId("2");
-        List<MovieWithWatchAbilityResDto> movieWithWatchAbilityResDtos = movieService.findAvailableMovies(movieWithWatchAbilityReqDto);
+        MovieAvailableReqDto movieAvailableReqDto = new MovieAvailableReqDto();
+        movieAvailableReqDto.setBookingDate("2024-11-19");
+        movieAvailableReqDto.setTheaterId(2L);
+        List<MovieAvailableResDto> movieAvailableResDtos = movieService.findAvailableMovies(movieAvailableReqDto);
 
         // when
-        MovieWithWatchAbilityResDto movieWithWatchAbilityResDtoNotWatchable = movieWithWatchAbilityResDtos.get(19);
-        MovieWithWatchAbilityResDto movieWithWatchAbilityResDtoWatchable = movieWithWatchAbilityResDtos.get(20);
+        MovieAvailableResDto movieAvailableResDtoNotWatchable = movieAvailableResDtos.get(19);
+        MovieAvailableResDto movieAvailableResDtoWatchable = movieAvailableResDtos.get(20);
 
         // then
-        Assertions.assertThat(movieWithWatchAbilityResDtoNotWatchable.isWatchable()).isFalse();
-        Assertions.assertThat(movieWithWatchAbilityResDtoWatchable.isWatchable()).isTrue();
+        Assertions.assertThat(movieAvailableResDtoNotWatchable.isWatchable()).isFalse();
+        Assertions.assertThat(movieAvailableResDtoWatchable.isWatchable()).isTrue();
     }
 }

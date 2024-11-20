@@ -17,8 +17,8 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
             "    JOIN r.schedule sc " +
             "    WHERE sc.theater.id = :#{#paramSeat.theaterId} " +
             "    AND sc.screen.id = :#{#paramSeat.screenId} " +
-            "    AND sc.scheduleDate = :#{#paramSeat.scheduleDate} " +
-            "    AND sc.startAt = :#{#paramSeat.startAt} " +
+            "    AND sc.scheduleDate = :#{#paramSeat.getScheduleDateAsLocalDate()} " +
+            "    AND sc.startAt = :#{#paramSeat.getStartAtAsLocalTime()} " +
             "    AND r.seat.id = se.id " +
             ") THEN false ELSE true END as isAvailable) " +
             "FROM Seat se " +

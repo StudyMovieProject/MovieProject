@@ -35,7 +35,7 @@ class ScheduleServiceTest {
     public void list_test() throws Exception {
         // given
         ScheduleReqDto scheduleReqDto = new ScheduleReqDto();
-        scheduleReqDto.setBookingDate(LocalDate.now());
+        scheduleReqDto.setBookingDate(String.valueOf(LocalDate.now()));
         scheduleReqDto.setTheaterId("2"); // 영화관
         scheduleReqDto.setMovieId("21"); // 영화 정보
 

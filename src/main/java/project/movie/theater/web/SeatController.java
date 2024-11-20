@@ -43,9 +43,9 @@ public class SeatController {
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })
-    @GetMapping("/available")
+    @PostMapping("/available")
     public ResponseEntity<ResponseDto<List<SeatAvailableResDto>>> listAvailableSeats(
-            @ModelAttribute @Valid @Parameter(description = "좌석 리스트 요청 객체") SeatReqDto seatReqDto) {
+        @RequestBody @Valid @Parameter(description = "좌석 리스트 요청 객체") SeatReqDto seatReqDto) {
         log.info("listAvailable 메서드 실행: {}", seatReqDto);
 
         List<SeatAvailableResDto> seatAvailableResDtos = seatService.findAvailableSeats(seatReqDto);

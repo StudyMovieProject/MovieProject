@@ -10,15 +10,15 @@ import project.movie.movie.domain.Movie;
 @Setter
 @ToString
 @NoArgsConstructor
-public class MovieWithWatchAbilityResDto {
+public class MovieAvailableResDto {
     private Movie movie;
     private boolean isWatchable;
 
-    public MovieWithWatchAbilityResDto(Movie movie) {
+    public MovieAvailableResDto(Movie movie) {
         this.movie = movie;
     }
 
-    public MovieWithWatchAbilityResDto(Movie movie, boolean isWatchable) {
+    public MovieAvailableResDto(Movie movie, boolean isWatchable) {
         this.movie = movie;
         this.isWatchable = isWatchable;
     }

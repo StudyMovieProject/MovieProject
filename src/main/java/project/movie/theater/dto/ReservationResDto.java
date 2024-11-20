@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import project.movie.member.domain.Member;
+import project.movie.member.dto.MemberRespDto;
 import project.movie.movie.domain.PaymentMethod;
 import project.movie.theater.domain.Reservation;
 import project.movie.theater.domain.Schedule;
@@ -19,13 +20,13 @@ import java.time.LocalDateTime;
 @Builder
 public class ReservationResDto {
     @Schema(description = "예약 계정", required = true, example = "java.lang.Object")
-    private Member member;
+    private MemberRespDto memberRespDto;
 
     @Schema(description = "영화 일정", required = true, example = "java.lang.Object")
-    private Schedule schedule;
+    private ScheduleResDto scheduleResDto;
 
     @Schema(description = "좌석", required = true, example = "java.lang.Object")
-    private Seat seat;
+    private SeatResDto seatResDto;
 
     @Schema(description = "인원수", required = true, example = "1")
     private Integer headCount; // 인원수
@@ -45,28 +46,17 @@ public class ReservationResDto {
     @Schema(description = "결재일", required = false, example = "TRUE | FALSE")
     private LocalDateTime paidAt;
 
-    public ReservationResDto(Member member, Schedule schedule, Seat seat, Integer headCount, Long price, PaymentMethod paymentMethod, String cardNumber, Boolean isPaymentConfirmed, LocalDateTime paidAt) {
-        this.member = member;
-        this.schedule = schedule;
-        this.seat = seat;
-        this.headCount = headCount;
-        this.price = price;
-        this.paymentMethod = paymentMethod;
-        this.cardNumber = cardNumber;
-        this.isPaymentConfirmed = isPaymentConfirmed;
-        this.paidAt = paidAt;
-    }
-
     public static ReservationResDto from(Reservation reservation) {
         return ReservationResDto.builder()
-                .member(reservation.getMember())
-                .schedule(reservation.getSchedule())
-                .seat(reservation.getSeat())
+                .memberRespDto(MemberRespDto.from(reservation.getMember()))
+                .scheduleResDto(ScheduleResDto.from(reservation.getSchedule()))
+                .seatResDto(SeatResDto.from(reservation.getSeat()))
                 .headCount(reservation.getHeadCount())
                 .price(reservation.getPrice())
                 .paymentMethod(reservation.getPaymentMethod())
                 .cardNumber(reservation.getCardNumber())
                 .isPaymentConfirmed(reservation.getIsPaymentConfirmed())
+                .paidAt(reservation.getPaidAt())
                 .build();
     }
 }
