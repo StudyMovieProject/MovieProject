@@ -3,6 +3,9 @@ package project.movie.board.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +17,7 @@ public class BoardDto {
     private String content;
     private String theater;
     private int cate;
+    private LocalDateTime reg_date;
 
     public static BoardDto toDto(BoardRespDto board) {
         return new BoardDto(
@@ -22,7 +26,8 @@ public class BoardDto {
                 board.getTitle(),
                 board.getContent(),
                 board.getTheater(),
-                board.getCate());
+                board.getCate(),
+                board.getReg_date());
     }
 
 
