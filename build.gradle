@@ -60,7 +60,7 @@ dependencies {
 
 bootJar {
 	mainClass = 'project.movie.MovieApplication'
-	archiveFileName = "MovieProject.jar"
+	archiveFileName = "movie_project.jar"
 }
 
 tasks.named('test') {
