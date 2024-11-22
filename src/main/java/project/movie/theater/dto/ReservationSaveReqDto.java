@@ -11,6 +11,7 @@ import project.movie.theater.service.ScheduleService;
 import project.movie.theater.service.SeatService;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -65,6 +66,7 @@ public class ReservationSaveReqDto {
 
     public Reservation to(MemberService memberService, ScheduleService scheduleService, SeatService seatService) {
         return Reservation.builder()
+                .id(UUID.randomUUID().toString())
                 .member(memberService.getByMemberId(memberId))
                 .schedule(scheduleService.get(scheduleId))
                 .seat(seatService.get(seatId))
