@@ -27,6 +27,7 @@
             .catch(error => console.error('Error creating order:', error.message));
         }
 
+        //frontend에서 구현해야하는 부분 -> requestPay
         function requestPay(payCode, amount) {
             IMP.init('imp26375181');  // IAMPORT ID
 
@@ -44,6 +45,7 @@
                 }
             });
         }
+        // 여기까지
 
         function completePayment(impUid, payCode) {
             fetch('/api/pay/payment/complete', {
