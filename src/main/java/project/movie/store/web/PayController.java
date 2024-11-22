@@ -30,17 +30,22 @@ public class PayController {
     @PostMapping("/cart/purchase/create")
     public ResponseEntity<?> purchaseByCart(@RequestBody List<CartPurchaseDto> cartPurchaseDtos, @AuthenticationPrincipal UserDetails userDetails){
         PaymentRequestDto paymentRequestDto = payService.payCreate(cartPurchaseDtos, userDetails.getUsername());
-//        PaymentRequestDto paymentRequestDto = payService.payCreate(cartPurchaseDtos, "test10");
-        return new ResponseEntity<>(new ResponseDto<>(1, "주문번호 생성 완료", paymentRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "장바구니 주문번호 생성 완료", paymentRequestDto), HttpStatus.OK);
     }
 
     //결제 구매하기 전 결제 구매 생성 (바로 구매)
     @PostMapping("/direct/purchase/create")
     public ResponseEntity<?> purchaseByOne(@RequestBody PurchaseByOneDto purchaseByOneDto, @AuthenticationPrincipal UserDetails userDetails){
         PaymentRequestDto paymentRequestDto = payService.payCreateByOne(purchaseByOneDto, userDetails.getUsername());
-//        PaymentRequestDto paymentRequestDto = payService.payCreateByOne(purchaseByOneDto, "test10");
-        return new ResponseEntity<>(new ResponseDto<>(1, "선택된 상품 구매하기 조회", paymentRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "바로구매 주문번호 생성 완료", paymentRequestDto), HttpStatus.OK);
     }
+
+    /*
+
+    결제 진행
+
+     */
+
 
     //결제 완료 확인
     @PostMapping("/payment/complete")
@@ -59,7 +64,6 @@ public class PayController {
     @GetMapping
     public ResponseEntity<?> getPayInfoAllByMember(@AuthenticationPrincipal UserDetails userDetails){
         List<Pay> pays = payService.getPayInfoAllByMember(userDetails.getUsername());
-//        List<Pay> pays = payService.getPayInfoAllByMember("test10");
         payService.cancelCheck(pays);
 
         return new ResponseEntity<>(new ResponseDto<>(1,"결제 정보 리스트 조회 성공", pays),HttpStatus.OK);
