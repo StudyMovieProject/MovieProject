@@ -19,9 +19,8 @@ import java.time.LocalDateTime;
 public class Reservation extends Base {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
-    private Long id;
+    private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -54,7 +53,7 @@ public class Reservation extends Base {
 
 
     @Builder
-    public Reservation(Long id, Member member, Schedule schedule, Seat seat, Integer headCount, Long price, PaymentMethod paymentMethod, String cardNumber, Boolean isPaymentConfirmed, LocalDateTime paidAt) {
+    public Reservation(String id, Member member, Schedule schedule, Seat seat, Integer headCount, Long price, PaymentMethod paymentMethod, String cardNumber, Boolean isPaymentConfirmed, LocalDateTime paidAt) {
         this.id = id;
         this.member = member;
         this.schedule = schedule;
