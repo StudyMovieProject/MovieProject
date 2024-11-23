@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.movie.board.dto.BoardReqDto;
+import project.movie.common.domain.Base;
 import project.movie.likes.dto.LikesReqDto;
 import project.movie.member.domain.Member;
 import project.movie.member.repository.MemberRepository;
@@ -31,15 +32,15 @@ import java.time.LocalDateTime;
                 )
         }
 )
-public class Likes  {
+public class Likes extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "좋아요 번호", required = true, example = "1")
     private Long id;
 
-    @Column(name="create_date")
-    @Schema(description = "좋아요 날짜", required = true, example = "2024-11-20")
-    private LocalDateTime createDate;
+//    @Column(name="create_date")
+//    @Schema(description = "좋아요 날짜", required = true, example = "2024-11-20")
+//    private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
@@ -52,7 +53,7 @@ public class Likes  {
     private Movie movieId;
 
     public Likes(LikesReqDto requestsDto, MemberRepository memberRepository, MovieRepository movieRepository){
-        this.createDate= LocalDateTime.now();
+//        this.createDate= LocalDateTime.now();
         this.memberId = memberRepository.findByMemberId(requestsDto.getMemberId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
         );
