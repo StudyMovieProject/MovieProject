@@ -1,5 +1,7 @@
 package project.movie.board.web;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.InputStreamResource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,6 +12,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +38,11 @@ import project.movie.member.service.MemberService;
 import project.movie.common.web.response.ResponseDto;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -128,6 +137,19 @@ public class BoardController {
 
     }
 
+    //첨부파일 다운로드
+    @GetMapping("/download/{id}")
+    public ResponseEntity<Resource> fileDownload(@PathVariable("id") int boardId) throws IOException {
+        BoardRespDto boardRespDto = boardService.getList(boardId);
+        Path path = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static" + boardRespDto.getFilepath());
+        Resource resource = new InputStreamResource(Files.newInputStream(path));
+        String encodedFilename = URLEncoder.encode(boardRespDto.getOriginal_filename(), StandardCharsets.UTF_8.toString());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFilename + "\"")
+                .body(resource);
+    }
     //선택 게시물 수정
 //    @Operation(summary = "선택한 게시물 수정")
 //    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
