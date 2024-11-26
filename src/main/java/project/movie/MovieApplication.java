@@ -13,14 +13,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class MovieApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
-		System.out.println("test");
 		SpringApplication.run(MovieApplication.class, args);
 	}
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(MovieApplication.class);
-	}
+//	@Override
+//	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//		return application.sources(MovieApplication.class);
+//	}
 
 
 }
