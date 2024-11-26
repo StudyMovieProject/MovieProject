@@ -88,8 +88,8 @@ public class ReviewController {
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "로그인 후 삭제하세요"),
     })
-    public ResponseEntity<?> deleteList(@PathVariable Long id ){
-        return new ResponseEntity<>(new ResponseDto<>(1, "게시물 삭제 성공", reviewService.deleteList(id)), HttpStatus.OK);
+    public ResponseEntity<?> deleteList(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시물 삭제 성공", reviewService.deleteList(id,userDetails.getUsername())), HttpStatus.OK);
     }
 
 
@@ -101,8 +101,8 @@ public class ReviewController {
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "로그인 후 수정하세요"),
     })
-    public ResponseEntity<?> updateList(@PathVariable Long id, @RequestBody ReviewReqDto requestsDto )throws Exception{
-        reviewService.updateList(id, requestsDto);
+    public ResponseEntity<?> updateList(@PathVariable Long id, @RequestBody ReviewReqDto requestsDto , @AuthenticationPrincipal UserDetails userDetails)throws Exception{
+        reviewService.updateList(id, requestsDto, userDetails.getUsername());
         return new ResponseEntity<>(new ResponseDto<>(1, "게시물 수정 성공", requestsDto), HttpStatus.OK);
     }
 

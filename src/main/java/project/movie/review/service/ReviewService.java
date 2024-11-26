@@ -52,11 +52,14 @@ public class ReviewService {
 
     //선택한 리뷰 삭제
     @Transactional
-    public ReviewRespDto deleteList(Long id) {
+    public ReviewRespDto deleteList(Long id, String userId) {
         Review review = reviewRepository.findById(id).orElseThrow(() -> {
             return new IllegalArgumentException("선택한 게시물이 존재하지 않습니다.");
         });
 
+        if (!review.getMember().getMemberId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 게시물만 삭제할 수 있습니다.");
+        }
         // 게시글이 있는 경우 삭제처리
         reviewRepository.deleteById(id);
 
@@ -65,11 +68,13 @@ public class ReviewService {
 
     //내가 작성한 리뷰 수정
     @Transactional
-    public ReviewRespDto updateList(Long id, ReviewReqDto requestsDto) throws Exception {
+    public ReviewRespDto updateList(Long id, ReviewReqDto requestsDto, String userId) throws Exception {
         Review review= reviewRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("선택한 게시물이 존재하지 않습니다.")
         );
-
+        if (!review.getMember().getMemberId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 게시물만 수정할 수 있습니다.");
+        }
         review.update(requestsDto);
         return new ReviewRespDto(review);
     }
