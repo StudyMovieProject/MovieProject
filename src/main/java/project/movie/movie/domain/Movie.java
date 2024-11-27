@@ -55,7 +55,6 @@ public class Movie extends Base {
 
     // 줄거리
     @Schema(description = "줄거리", example = "해리 포터 일생일대 최대 난관! 요즘 들어 매일 꾸는 악몽 때문....")
-    @Lob
     @Column(name = "plot", columnDefinition="BLOB")
     private String plot;
 
