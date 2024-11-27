@@ -24,14 +24,16 @@ public class CartController {
     @GetMapping
     public ResponseEntity<?> getAllCartItems(@AuthenticationPrincipal UserDetails userDetails){
         List<Cart> cartItems = cartService.getCartByMemberId(userDetails.getUsername());
-//        List<Cart> cartItems = cartService.getCartByMemberId("test10");
-        return new ResponseEntity<>(new ResponseDto<>(1, "장바구니 조회 성공", cartItems) ,HttpStatus.OK);
+        if (cartItems.isEmpty()){
+            return new ResponseEntity<>(new ResponseDto<>(1,"장바구니가 비어있습니다.", null),HttpStatus.OK);
+        }
+        List<CartRespDto> cartRespDtos = cartService.convertToDtos(cartItems);
+        return new ResponseEntity<>(new ResponseDto<>(1, "장바구니 조회 성공", cartRespDtos) ,HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> addItemsToCart(@RequestBody List<CartItemRequestDto> items, @AuthenticationPrincipal UserDetails userDetils){
         cartService.cartSave(items, userDetils.getUsername());
-//        cartService.cartSave(items, "test10");
         return new ResponseEntity<>(new ResponseDto<>(1,"장바구니에 상품이 추가되었습니다",items),HttpStatus.OK);
     }
 

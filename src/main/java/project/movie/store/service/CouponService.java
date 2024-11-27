@@ -10,10 +10,12 @@ import project.movie.store.domain.coupon.Coupon;
 import project.movie.store.domain.coupon.CouponStatus;
 import project.movie.store.domain.pay.Pay;
 import project.movie.store.domain.pay.PayDetail;
+import project.movie.store.dto.coupon.CouponRespDto;
 import project.movie.store.repository.CouponRepository;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class CouponService {
         List<PayDetail> payDetails = pay.getPayDetails();
         for (PayDetail payDetail : payDetails) {
             Coupon coupon = new Coupon();
+            coupon.setCpId(Coupon.generateUUID());
             coupon.setPay(payDetail.getPay());
             coupon.setCpDate(LocalDateTime.now());
             coupon.setMemberId(pay.getMember().getMemberId());
@@ -42,19 +45,21 @@ public class CouponService {
     }
 
 
-    public List<Coupon> couponList(String memberId){
-        return couponRepository.findByMemberId(memberId);
+    public List<CouponRespDto> couponList(String memberId){
+        List<Coupon> coupons = couponRepository.findByMemberId(memberId);
+        return convertToDtos(coupons);
     }
 
-    public Coupon getCoupon(Integer id){
-        return couponRepository.findByCpCode(id)
+    public CouponRespDto getCoupon(String cpId){
+        Coupon coupon = couponRepository.findByCpId(cpId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 쿠폰입니다."));
+        return convertToDto(coupon);
     }
 
     //쿠폰 사용
     @Transactional
-    public void useCoupon(Integer couponId){
-        Coupon coupon = couponRepository.findByCpCode(couponId)
+    public CouponRespDto useCoupon(String cpId){
+        Coupon coupon = couponRepository.findByCpId(cpId)
                 .orElseThrow(()->new CustomApiException("존재하지 않는 쿠폰입니다."));
 
         if (coupon.getCpStatus() == CouponStatus.USED){
@@ -62,17 +67,37 @@ public class CouponService {
         }
 
         coupon.setCpStatus(CouponStatus.USED);
-        couponRepository.save(coupon);
+
+        return convertToDto(coupon);
     }
 
 
     //쿠폰 사용시 삭제
     @Transactional
-    public void deleteCoupon(Integer couponId){
-        Coupon coupon = couponRepository.findByCpCode(couponId)
+    public void deleteCoupon(String cpId){
+        Coupon coupon = couponRepository.findByCpId(cpId)
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 쿠폰입니다."));
 
         couponRepository.delete(coupon);
+    }
+
+    public void cancelPayAndCoupon(String payCode){
+        List<Coupon>coupons = couponRepository.findByPay_payCode(payCode);
+        for(Coupon coupon : coupons){
+            deleteCoupon(coupon.getCpId());
+        }
+    }
+
+    private CouponRespDto convertToDto(Coupon coupon){
+        return CouponRespDto.from(coupon);
+    }
+
+    private List<CouponRespDto> convertToDtos (List<Coupon> coupons){
+        List<CouponRespDto> dtos = new ArrayList<>();
+        for(Coupon coupon: coupons){
+            dtos.add(CouponRespDto.from(coupon));
+        }
+        return dtos;
     }
 
     //쿠폰 만료
@@ -84,7 +109,7 @@ public class CouponService {
 
         for (Coupon coupon : expiredCoupons) {
             coupon.setCpStatus(CouponStatus.EXPIRED);
-            couponRepository.save(coupon);
+
         }
     }
 }

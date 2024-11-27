@@ -23,9 +23,12 @@ import project.movie.store.dto.PG.PaymentCompleteDto;
 import project.movie.store.dto.PG.PaymentRequestDto;
 import project.movie.store.dto.cart.CartPurchaseDto;
 import project.movie.store.dto.cart.PurchaseByOneDto;
+import project.movie.store.dto.pay.PayRespDto;
 import project.movie.store.repository.PayRepository;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,10 +45,6 @@ public class PayService {
     private final ItemService itemService;
     private final CartService cartService;
 
-    public List<Pay> payListByMemberId(String memberId){
-        return payRepository.findByMember_memberId(memberId)
-                .orElseThrow(() -> new CustomApiException("조회되지 않습니다"));
-    }
 
     @Transactional
     public PaymentRequestDto payCreate(List<CartPurchaseDto> cartPurchaseDtos, String memberId){
@@ -121,12 +120,12 @@ public class PayService {
         if("paid".equals(response.getResponse().getStatus())){
             Pay findPay = getFindByPayCode(response.getResponse().getPayCode());
             if(response.getResponse().getPayPrice().equals(findPay.getPayPrice())){
-                findPay.setPayStatus(PayStatus.PAID);
 
                 if (findPay.getPayStatus().equals(PayStatus.CART_CREATE)){
                     cartService.paidCart(findPay);
                 }
-
+                findPay.setPayStatus(PayStatus.PAID);
+                findPay.setImpCode(dto.getImpUid());
                 couponService.couponSave(findPay);
                 return response;
             }else{
@@ -159,49 +158,41 @@ public class PayService {
 
 
     //결제정보 조회
-    public Pay getPayInfo(String payCode){
-        return payRepository.findById(payCode)
+    public PayRespDto getPayInfo(String payCode){
+        Pay pay = payRepository.findById(payCode)
                 .orElseThrow(() -> new CustomApiException("결제코드가 존재하지 않습니다"));
+
+        return PayRespDto.from(pay);
+    }
+
+    public List<PayRespDto> convertToDtos(List<Pay> pays){
+        List<PayRespDto> payRespDtos = new ArrayList<>();
+        for(Pay pay : pays){
+            payRespDtos.add(PayRespDto.from(pay));
+        }
+        return payRespDtos;
     }
 
 
 
 
-
-
+    @Transactional
     //결제정보 업데이트 ( 결제 취소 )
-    public void cancelPayment(String payCode){
+    public ResponseDto<?> cancelPayment(String payCode){
         Optional<Pay> payOptional = payRepository.findById(payCode);
         if(payOptional.isPresent()){
             Pay pay = payOptional.get();
-            pay.setCancelDate(LocalDateTime.now());
-            pay.setPayStatus(PayStatus.CANCEL);
+            if(!payDateOlderOneWeek(pay.getPayDate())){
+                cancelPGResponse(pay.getImpCode(), "결제 취소 요청");
+
+                couponService.cancelPayAndCoupon(pay.getPayCode());
+                deletePayment(pay.getPayCode());
+                return new ResponseDto<>(1,"취소 성공", null);
+            }
+            PayRespDto dto = PayRespDto.from(pay);
+            return new ResponseDto<>(1, "결제 후 일주일 지난 결제 취소 불가", dto);
         }else{
             throw new CustomApiException("결제 정보를 찾을 수 없습니다");
-        }
-    }
-
-    public void cancelCheck(List<Pay> pays){
-
-        pendingToCancel(pays);
-
-        //결제 취소가 되었으면 (일정시간 지나면 삭제)
-        for (Pay pay : pays) {
-            if (pay.getPayStatus().equals(PayStatus.CANCEL)){
-                //일주일 이후면
-                if (pay.getCancelDate().isAfter(LocalDateTime.now().plusWeeks(1))){
-                    deletePayment(pay.getPayCode());
-                }
-            }
-        }
-    }
-
-    //임시 코드 (취소 완료 상태로 바꾸기 Pending -> Cancel)
-    public void pendingToCancel(List<Pay> pays){
-        for (Pay pay : pays) {
-            if(pay.getCancelDate().isAfter(LocalDateTime.now().plusDays(3))){
-                pay.setPayStatus(PayStatus.CANCEL);
-            }
         }
     }
 
@@ -218,5 +209,11 @@ public class PayService {
     public Pay getFindByPayCode(String payCode){
         return payRepository.findById(payCode)
                 .orElseThrow(() -> new CustomApiException("결제 정보가 존재하지 않습니다."));
+    }
+
+    private boolean payDateOlderOneWeek(LocalDateTime payDate){
+        LocalDateTime now = LocalDateTime.now();
+        long daysBetween = ChronoUnit.DAYS.between(payDate, now);
+        return daysBetween > 7;
     }
 }

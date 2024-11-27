@@ -41,7 +41,6 @@ public class OAuth2Service {
 
     public String signUp(String code){
         String accessToken = getAccessToken(code);
-        System.out.println(accessToken);
         String jwtToken = jwtUtil.generateJwt(getUserInfo(accessToken), 1000* 60 * 60L);
         return jwtToken;
     }
@@ -72,7 +71,6 @@ public class OAuth2Service {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
-            System.out.println(jsonNode);
             return jsonNode.get("access_token").asText();
         }catch (Exception e){
             throw new RuntimeException(e);

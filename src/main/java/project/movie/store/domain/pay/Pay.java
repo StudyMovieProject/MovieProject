@@ -20,6 +20,9 @@ public class Pay {
     @Column(name="pay_code", nullable = false, length = 100)
     private String payCode;
 
+    @Column(name="imp_code")
+    private String impCode;
+
     @ManyToOne
     @JoinColumn(name="customer_id", nullable = false)
     private Member member;

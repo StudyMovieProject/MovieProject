@@ -14,6 +14,7 @@ import project.movie.store.domain.item.Item;
 import project.movie.store.domain.pay.Pay;
 import project.movie.store.domain.pay.PayDetail;
 import project.movie.store.dto.cart.CartItemRequestDto;
+import project.movie.store.dto.cart.CartRespDto;
 import project.movie.store.dto.cart.CartUpdateDto;
 import project.movie.store.repository.CartRepository;
 
@@ -81,10 +82,12 @@ public class CartService {
             Cart cart = findByCartCode(uCart.getCartCode());
             cart.setCartQty(uCart.getCartQty());
             cart.setCartDate(LocalDateTime.now());
-            return new ResponseDto<>(1, "장바구니가 성공적으로 업데이트 되었습니다", cart);
+            CartRespDto cartRespDto = convertToDto(cart);
+            return new ResponseDto<>(1, "장바구니가 성공적으로 업데이트 되었습니다", cartRespDto);
         }
     }
 
+    @Transactional
     public void paidCart(Pay pay){
 
         for (PayDetail payDetail : pay.getPayDetails()) {
@@ -92,6 +95,16 @@ public class CartService {
             repository.deleteById(cart.getCartCode());
         }
 
+    }
+
+    public List<CartRespDto> convertToDtos(List<Cart> carts){
+        return carts.stream()
+                .map(this::convertToDto)
+                .toList();
+    }
+
+    public CartRespDto convertToDto(Cart cart){
+        return CartRespDto.from(cart);
     }
 
 }
