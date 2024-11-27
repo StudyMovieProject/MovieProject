@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface CouponRepository extends JpaRepository<Coupon, String> {
     List<Coupon> findByMemberId(String memberId);
-    Optional<Coupon> findByCpCode(Integer cpCode);
+    Optional<Coupon> findByCpId(String cpId);
+    List<Coupon> findByPay_payCode(String payCode);
     List<Coupon> findByCpDateBeforeAndCpStatusNot(LocalDateTime expirationDate, int status);
 }

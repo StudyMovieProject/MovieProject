@@ -8,5 +8,5 @@ import lombok.Setter;
 public class PaymentCompleteDto {
     private String impUid;
     private String payCode;
-    private String cartStatus;
+//    private String cartStatus;
 }

@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.movie.common.handler.exception.CustomApiException;
 import project.movie.store.domain.item.Item;
+import project.movie.store.dto.item.ItemRespDto;
 import project.movie.store.repository.ItemRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,6 +32,15 @@ public class ItemService {
                 .orElseThrow(() -> new CustomApiException( "존재하지 않는 상품입니다."));
     }
 
+    public List<ItemRespDto> convertToDtoList(List<Item> items){
+        return items.stream()
+                .map(this::convertToDto)
+                .toList();
+    }
+
+    public ItemRespDto convertToDto(Item item){
+        return ItemRespDto.from(item);
+    }
 
 
 }

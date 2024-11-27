@@ -45,7 +45,7 @@
                 }
             });
         }
-        // 여기까지
+
 
         function completePayment(impUid, payCode) {
             fetch('/api/pay/payment/complete', {
@@ -68,6 +68,8 @@
                 alert('Payment verification failed!');
             });
         }
+
+        // 여기까지
 
         function requestPayButtonClick() {
             const amount = 10;  // 예시 금액

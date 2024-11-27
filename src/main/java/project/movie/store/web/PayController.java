@@ -13,9 +13,12 @@ import project.movie.store.dto.PG.IamportResponseDto;
 import project.movie.store.dto.PG.PaymentCompleteDto;
 import project.movie.store.dto.PG.PaymentRequestDto;
 import project.movie.store.dto.cart.CartPurchaseDto;
+import project.movie.store.dto.cart.CartRespDto;
 import project.movie.store.dto.cart.PurchaseByOneDto;
+import project.movie.store.dto.pay.PayRespDto;
 import project.movie.store.service.PayService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -40,12 +43,6 @@ public class PayController {
         return new ResponseEntity<>(new ResponseDto<>(1, "바로구매 주문번호 생성 완료", paymentRequestDto), HttpStatus.OK);
     }
 
-    /*
-
-    결제 진행
-
-     */
-
 
     //결제 완료 확인
     @PostMapping("/payment/complete")
@@ -57,28 +54,20 @@ public class PayController {
 
     @GetMapping("/{payCode}")
     public ResponseEntity<?> paidPage(@PathVariable String orderId ){
-        Pay pay = payService.getPayInfo(orderId);
-        return new ResponseEntity<>(new ResponseDto<>(1,"결제 완료 페이지 조회 성공", pay), HttpStatus.OK);
+        PayRespDto payRespDto = payService.getPayInfo(orderId);
+        return new ResponseEntity<>(new ResponseDto<>(1,"결제 완료 페이지 조회 성공", payRespDto), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<?> getPayInfoAllByMember(@AuthenticationPrincipal UserDetails userDetails){
         List<Pay> pays = payService.getPayInfoAllByMember(userDetails.getUsername());
-        payService.cancelCheck(pays);
-
-        return new ResponseEntity<>(new ResponseDto<>(1,"결제 정보 리스트 조회 성공", pays),HttpStatus.OK);
+        List<PayRespDto> payRespDtos = payService.convertToDtos(pays);
+        return new ResponseEntity<>(new ResponseDto<>(1,"결제 정보 리스트 조회 성공", payRespDtos),HttpStatus.OK);
     }
 
-    /**
-     * 임시코드 (추후 PG API 연결시 수정)
-     * Pending -> Cancel (3일이후)
-     * Cancel -> 일주일후 (삭제)
-     */
     @PutMapping("/cancel/{payCode}")
     public ResponseEntity<?> cancelPayment(@PathVariable String payCode){
-        payService.cancelPayment(payCode);
-        Pay pay = payService.getFindByPayCode(payCode);
-        return new ResponseEntity<>(new ResponseDto<>(1, "결제 취소 성공", pay),HttpStatus.OK);
+        return new ResponseEntity<>(payService.cancelPayment(payCode),HttpStatus.OK);
     }
 
 

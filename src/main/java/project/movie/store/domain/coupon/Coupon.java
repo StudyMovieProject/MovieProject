@@ -7,6 +7,7 @@ import project.movie.store.domain.item.Item;
 import project.movie.store.domain.pay.Pay;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name="coupon")
@@ -17,7 +18,7 @@ public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="cp_code", nullable = false)
-    private int cpCode;
+    private Integer cpCode;
 
     @ManyToOne
     @JoinColumn(name="pay_code", nullable = false)
@@ -26,6 +27,9 @@ public class Coupon {
     @ManyToOne
     @JoinColumn(name="item_code", nullable = false)
     private Item item;
+
+    @Column(name="cp_id")
+    private String cpId;
 
     @Column(name="customer_id", nullable = false, length = 30)
     private String memberId;
@@ -37,4 +41,8 @@ public class Coupon {
     private Integer cpStatus;
 
     public Coupon(){}
+
+    public static String generateUUID(){
+        return UUID.randomUUID().toString();
+    }
 }

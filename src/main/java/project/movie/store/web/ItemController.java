@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.movie.common.web.response.ResponseDto;
 import project.movie.store.domain.item.Item;
+import project.movie.store.dto.item.ItemRespDto;
 import project.movie.store.service.ItemService;
 
 import java.util.List;
@@ -25,17 +26,16 @@ public class ItemController {
     @GetMapping
     public ResponseEntity<?> getItemList(){
         List<Item> items = itemService.itemFindAll();
-        return new ResponseEntity<>(new ResponseDto<>(1, "상점 품목 조회 성공", items), HttpStatus.OK);
+        List<ItemRespDto> itemRespDtos = itemService.convertToDtoList(items);
+        return new ResponseEntity<>(new ResponseDto<>(1, "상점 품목 조회 성공", itemRespDtos), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getItem(@PathVariable Integer id){
         Item findItem = itemService.itemFindByItemCode(id);
-        return new ResponseEntity<>(new ResponseDto<>(1, "품목 조회 성공", findItem), HttpStatus.OK);
+        ItemRespDto itemRespDto = itemService.convertToDto(findItem);
+        return new ResponseEntity<>(new ResponseDto<>(1, "품목 조회 성공", itemRespDto), HttpStatus.OK);
     }
-
-
-
 
 
 }
