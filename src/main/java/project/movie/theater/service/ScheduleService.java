@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.movie.common.handler.exception.CustomApiException;
 import project.movie.theater.domain.Schedule;
+import project.movie.theater.dto.ScheduleQueryDto;
 import project.movie.theater.dto.ScheduleResDto;
 import project.movie.theater.dto.ScheduleSaveDto;
 import project.movie.theater.dto.ScheduleReqDto;
@@ -24,10 +25,10 @@ public class ScheduleService {
         scheduleRepository.save(scheduleSaveDto.to());
     }
 
-    @Transactional
-    public List<ScheduleResDto> findShowTimes(ScheduleReqDto scheduleReqDto) {
-        List<Schedule> schedules = scheduleRepository.findShowTimesByDateAndTheaterAndMovie(scheduleReqDto);
-        return schedules.stream().map(ScheduleResDto::from).toList();
+    @Transactional(readOnly = true)
+    public ScheduleResDto findShowTimes(ScheduleReqDto scheduleReqDto) {
+        List<ScheduleQueryDto> schedules = scheduleRepository.findShowTimesByDateAndTheaterAndMovie(scheduleReqDto);
+        return ScheduleResDto.transformSchedules(schedules);
     }
 
     @Transactional

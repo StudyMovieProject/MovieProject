@@ -17,13 +17,13 @@ import java.time.format.DateTimeFormatter;
 public class MovieAvailableReqDto {
     @Schema(description = "영화 예매 날짜", required = true, example = "2024-11-19")
     @NotNull(message = "영화 예매 날짜를 선택해주세요.")
-    private String bookingDate;
+    private String scheduleDate;
 
     @Schema(description = "영화관 고유 번호", required = true, example = "1")
     @NotNull(message = "영화관을 선택해주세요.")
     private Long theaterId;
 
-    public LocalDate getBookingDateAsLocalDate() {
-        return LocalDate.parse(this.bookingDate, DateTimeFormatter.ISO_DATE);
+    public LocalDate getScheduleDateAsLocalDate() {
+        return LocalDate.parse(this.scheduleDate, DateTimeFormatter.ISO_DATE);
     }
 }

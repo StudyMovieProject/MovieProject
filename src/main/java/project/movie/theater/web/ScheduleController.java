@@ -32,21 +32,14 @@ public class ScheduleController {
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })
     @GetMapping
-    public ResponseEntity<ResponseDto<List<ScheduleResDto>>> listShowTimes(
+    public ResponseEntity<ResponseDto<ScheduleResDto>> listShowTimes(
             @Parameter(description = "영화 상영 시간표 정보 요청 DTO") ScheduleReqDto scheduleReqDto) {
-        List<ScheduleResDto> schduleResDtoList = null;
-//        try {
+        ScheduleResDto schduleResDto = null;
         log.info("ScheduleService > listByDateAndTheaterAndMovie START: {}", scheduleReqDto);
 
-        schduleResDtoList = scheduleService.findShowTimes(scheduleReqDto);
+        schduleResDto = scheduleService.findShowTimes(scheduleReqDto);
 
         log.info("ScheduleService > listByDateAndTheaterAndMovie END: {}", scheduleReqDto);
-//        } catch (Exception e) {
-//            log.error("[ERROR] ScheduleService > listByDateAndTheaterAndMovie: {}", e.getMessage());
-//            return ResponseEntity.ok(new ResponseDto<>(-1, "시간표 목록 조회 실패", null));
-//        }
-        return ResponseEntity.ok(new ResponseDto<>(1, "영화 상영 시간표 정보 조회 성공", schduleResDtoList));
+        return ResponseEntity.ok(new ResponseDto<>(1, "영화 상영 시간표 정보 조회 성공", schduleResDto));
     }
-
-
 }

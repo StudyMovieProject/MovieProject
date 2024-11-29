@@ -127,7 +127,7 @@ class MovieServiceTest extends DummyObject {
     public void list_available_movie_test() throws Exception {
         // given
         MovieAvailableReqDto movieAvailableReqDto = new MovieAvailableReqDto();
-        movieAvailableReqDto.setBookingDate("2024-11-19");
+        movieAvailableReqDto.setScheduleDate("2024-11-19");
         movieAvailableReqDto.setTheaterId(2L);
         List<MovieAvailableResDto> movieAvailableResDtos = movieService.findAvailableMovies(movieAvailableReqDto);
 
