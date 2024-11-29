@@ -15,6 +15,8 @@ import project.movie.movie.dto.MovieResDto;
 import project.movie.movie.dto.MovieAvailableResDto;
 import project.movie.movie.repository.MovieRepository;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -63,14 +65,22 @@ public class MovieService {
     }
 
     public List<MovieAvailableResDto> findAvailableMovies(MovieAvailableReqDto movieAvailableReqDto) {
-        return movieRepository.findAvailableMoviesByTheaterAndDate(movieAvailableReqDto);
+        List<MovieAvailableResDto> availableMoviesByTheaterAndDate = movieRepository.findAvailableMoviesByTheaterAndDate(movieAvailableReqDto);
+        sortMethod(availableMoviesByTheaterAndDate);
+
+        return availableMoviesByTheaterAndDate;
     }
 
-    public Page<Movie> getMoviesPage(String criteria, String sort) {
-        Pageable pageable = (sort.equals("ASC")) ?
-                PageRequest.of(0, 100, Sort.by(Sort.Direction.ASC, criteria))
-                : PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, criteria));
+    public void sortMethod(List<MovieAvailableResDto> list) {
+        Collections.sort(list, new Comparator<MovieAvailableResDto>() {
+            @Override
+            public int compare(MovieAvailableResDto o1, MovieAvailableResDto o2) {
+                if (o1.isWatchable() != o2.isWatchable()) {
+                    return o2.isWatchable() ? 1 : -1;
+                }
 
-        return movieRepository.findAll(pageable);
+                return o1.getTitle().compareTo(o2.getTitle());
+            }
+        });
     }
 }

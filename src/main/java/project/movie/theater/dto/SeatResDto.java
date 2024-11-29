@@ -1,5 +1,6 @@
 package project.movie.theater.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,9 +16,11 @@ public class SeatResDto {
     @Schema(description = "좌석코드", required = true, example = "1")
     private Long id;
 
+    @JsonIgnore
     @Schema(description = "상영관 코드", required = true, example = "1")
     private ScreenResDto screenResDto;
 
+    @JsonIgnore
     @Schema(description = "영화관 코드", required = true, example = "1")
     private TheaterResDto theaterResDto;
 
@@ -30,6 +33,7 @@ public class SeatResDto {
     @Schema(description = "좌석 줄번호", required = true, example = "1")
     private Integer seatLineNo;
 
+    @JsonIgnore
     @Schema(description = "예매 가능 여부", required = true, example = "true | false")
     private Boolean isBookable; // 예매 가능 여부
 
