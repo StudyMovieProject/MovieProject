@@ -30,7 +30,7 @@ public class SeatController {
      * 좌석 리스트 조회. 좌석 리스트에 각 좌석 예매 가능 여부 변수(isAvailable) 가 포함 되어 있음
      *
      * @param seatReqDto {
-     *   bookingDate: 영화 날짜
+     *   scheduleDate: 영화 날짜
      *   bookingTime: 영화 시간
      *   screenId: 스크린 Id
      *   theaterId: 영화 Id

@@ -67,7 +67,7 @@ public class MovieTimetableDataMakeScheduler {
     private static final LocalDate TODAY = LocalDate.now();
 
 //    @Scheduled(fixedRate = 5000L)
-    @Scheduled(cron = "0 * 7 * * ?")
+    @Scheduled(cron = "0 0 7 * * ?")
     public void makeMovieTimetableData() {
         log.info("[시작]] makeMovieTimetableData");
 

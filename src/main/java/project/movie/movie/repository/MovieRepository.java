@@ -41,12 +41,12 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "case when ?1 = 'LATEST' then m.productDate end desc")
     List<Movie> findMoviesByStatus(String status);
 
-    @Query("SELECT new project.movie.movie.dto.MovieAvailableResDto(m, " +
+    @Query("SELECT new project.movie.movie.dto.MovieAvailableResDto(m.id, m.title, m.titleEn,  " +
                 "CASE WHEN EXISTS (" +
                 "    SELECT 1 FROM Schedule s " +
                 "    WHERE s.movie = m " +
                 "    AND s.theater.id = :#{#paramMovie.theaterId} " +
-                "    AND s.scheduleDate = :#{#paramMovie.getBookingDateAsLocalDate()}" +
+                "    AND s.scheduleDate = :#{#paramMovie.getScheduleDateAsLocalDate()}" +
                 ") THEN true ELSE false END as isWatchable) " +
                 "FROM Movie m")
     List<MovieAvailableResDto> findAvailableMoviesByTheaterAndDate(@Param("paramMovie") MovieAvailableReqDto movieAvailableReqDto);

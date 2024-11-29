@@ -34,7 +34,7 @@ public class ReservationController {
     })
     @PostMapping("/create")
     public ResponseEntity<?> create(
-            @RequestBody @Valid @Parameter(description = "영화 예매 요청 객체") ReservationSaveReqDto reservationSaveReqDto, BindingResult bindingResult) {
+            @RequestBody @Valid @Parameter(description = "영화 예매 요청 객체") ReservationSaveReqDto reservationSaveReqDto) {
         log.info("ReservationController create 메서드 실행");
         ReservationResDto reservationResDto = reservationService.create(reservationSaveReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "영화 예매 성공", reservationResDto), HttpStatus.CREATED);
