@@ -77,9 +77,9 @@ public class MovieController {
                     content = {@Content(schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "403", description = "액세스할 수 있는 권한이 없습니다."),
     })
-    @PostMapping("/available")
+    @GetMapping("/available")
     public ResponseEntity<ResponseDto<List<MovieAvailableResDto>>> listAvailableMovies(
-           @RequestBody @Valid @Parameter(description = "예매 영화 목록 요청 객체") MovieAvailableReqDto movieAvailableReqDto) {
+           @Valid @Parameter(description = "예매 영화 목록 요청 객체") MovieAvailableReqDto movieAvailableReqDto) {
         log.info("listAvailableMovies 메서드 실행: {}", movieAvailableReqDto);
 
         List<MovieAvailableResDto> movieRespDtos = movieService.findAvailableMovies(movieAvailableReqDto);
