@@ -13,7 +13,9 @@ import java.nio.file.Paths;
 
 public class UploadFileUtils {
     private static final Logger logger = LoggerFactory.getLogger(UploadFileUtils.class);
-    public static final String UPLOAD_PATH = new File("src/main/resources/static").getAbsolutePath(); // 업로드 경로
+     public static final String UPLOAD_PATH = "/opt/movie"; // 업로드 경로
+//    public static final String UPLOAD_PATH = new File("src/main/resources/static").getAbsolutePath(); // 업로드 경로
+
 
     public static String uploadImage(String uploadPath, String detPath, String fileUrl) throws MalformedURLException {
         String imagesFolder = Paths.get(uploadPath, detPath).toString();
