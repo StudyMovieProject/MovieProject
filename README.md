@@ -2,6 +2,15 @@
 
 생성일: 2024년 11월 20일 오후 11:21
 
+# 빌드방법
+<pre>
+    1. develop 브랜치 git pull
+    2. mysql 설치 진행
+    3. application.properties mysql 정보 수정
+    4. ./gradlew clean bootJar
+    5. java -jar MovieProject.jar (실행)
+</pre>
+
 # 인프라 구성
 ![image](https://github.com/user-attachments/assets/5e1c7ab8-d641-4111-ae8b-ef09b6724ed3)
 
