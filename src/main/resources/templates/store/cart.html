@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <style>
+        .cart-container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .cart-item {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .item-image {
+            width: 150px;
+            height: 150px;
+            margin-right: 20px;
+        }
+        .item-details {
+            flex-grow: 1;
+        }
+        .item-details p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="cart-container">
+    <h1>장바구니</h1>
+    <p th:text="${msg}"></p>
+    <div th:if="${cartData}">
+        <div th:each="cart : ${cartData}" class="cart-item">
+            <img th:src="@{${cart.item.itemImage}}" alt="상품 이미지" class="item-image"/>
+            <div class="item-details">
+                <h3 th:text="${cart.item.itemName}"></h3>
+                <p>상품 유형: <span th:text="${cart.item.itemType}"></span></p>
+                <p>상세 정보: <span th:text="${cart.item.itemDetail}"></span></p>
+                <p>사용 가능 장소: <span th:text="${cart.item.place}"></span></p>
+                <p>유효 기간: <span th:text="${cart.item.exp}"></span></p>
+                <p>가격: <span th:text="${cart.item.price} + ' 원'"></span></p>
+                <p>판매 가격: <span th:text="${cart.item.salePrice} + ' 원'"></span></p>
+                <p>수량: <span th:text="${cart.cartQty}"></span></p>
+                <p>추가 날짜: <span th:text="${cart.cartDate}"></span></p>
+            </div>
+        </div>
+    </div>
+    <div th:if="${cartData == null}">
+        <p>장바구니가 비어 있습니다.</p>
+    </div>
+</div>
+</body>
+</html>
