@@ -42,5 +42,8 @@ public class ItemService {
         return ItemRespDto.from(item);
     }
 
+    public void deleteAll(){
+        repository.deleteAll();
+    }
 
 }

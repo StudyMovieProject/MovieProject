@@ -46,6 +46,7 @@ public class ItemRespDto {
                 .itemDetail(item.getItemDetail())
                 .place(item.getPlace())
                 .exp(item.getExp())
+                .price(item.getPrice())
                 .salePrice(item.getSalePrice())
                 .itemImage(item.getItemImage())
                 .itemStatus(item.getItemStatus())

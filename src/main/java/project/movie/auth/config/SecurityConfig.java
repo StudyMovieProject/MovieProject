@@ -68,7 +68,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/logout", "/api/members/join", "/guest-login", "/api/items/**", "/naver/login", "/naver/callback").permitAll()
+                        .requestMatchers("/", "/login", "/logout", "/api/members/join", "/guest-login", "/api/items/**", "/naver/login", "/naver/callback", "/page/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated());
