@@ -1,4 +1,4 @@
-package project.movie.store.viewPage;
+package project.movie.viewPage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +40,6 @@ public class ItemPageController {
         model.addAttribute("item",item);
         return "/store/item-detail";
     }
+
 
 }

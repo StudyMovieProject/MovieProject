@@ -92,7 +92,7 @@ public class PayService {
         pay.setPayStatus(PayStatus.DIRECT_CREATE);
 
 
-        Item findItem =  itemService.itemFindByItemCode(purchaseByOneDto.getItem().getItemCode());
+        Item findItem =  itemService.itemFindByItemCode(purchaseByOneDto.getItemCode());
         PayDetail payDetail = new PayDetail();
         payDetail.setPay(pay);
         payDetail.setItem(findItem);

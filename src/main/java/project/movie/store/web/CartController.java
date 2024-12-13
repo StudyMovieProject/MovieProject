@@ -32,9 +32,9 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addItemsToCart(@RequestBody List<CartItemRequestDto> items, @AuthenticationPrincipal UserDetails userDetils){
-        cartService.cartSave(items, userDetils.getUsername());
-        return new ResponseEntity<>(new ResponseDto<>(1,"장바구니에 상품이 추가되었습니다",items),HttpStatus.OK);
+    public ResponseEntity<?> addItemsToCart(@RequestBody CartItemRequestDto item, @AuthenticationPrincipal UserDetails userDetils){
+        cartService.cartSave(item, userDetils.getUsername());
+        return new ResponseEntity<>(new ResponseDto<>(1,"장바구니에 상품이 추가되었습니다",item),HttpStatus.OK);
     }
 
 

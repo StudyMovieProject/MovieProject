@@ -34,19 +34,19 @@ public class CartService {
 
     //장바구니 담기
     @Transactional
-    public void cartSave(List<CartItemRequestDto> items, String memberId){
-        for (CartItemRequestDto item : items) {
-            Item findItem = itemService.itemFindByItemCode(item.getItemCode());
-            Cart cartItem = repository.findByItem_ItemCode(item.getItemCode());
-            if ( findItem.equals(cartItem)){
-                cartItem.setCartQty(cartItem.getCartQty() + item.getQuantity());
-            }else{
-                Member findMember = memberService.getByMemberId(memberId);
-                Cart newCart = new Cart(findItem, findMember, item.getQuantity(), CartStatus.CONTAIN);
+    public void cartSave(CartItemRequestDto item, String memberId){
 
-                repository.save(newCart);
-            }
+        Item findItem = itemService.itemFindByItemCode(item.getItemCode());
+        Cart cartItem = repository.findByItem_ItemCode(item.getItemCode());
+        if ( findItem.equals(cartItem)){
+            cartItem.setCartQty(cartItem.getCartQty() + item.getQuantity());
+        }else{
+            Member findMember = memberService.getByMemberId(memberId);
+            Cart newCart = new Cart(findItem, findMember, item.getQuantity(), CartStatus.CONTAIN);
+
+            repository.save(newCart);
         }
+
     }
 
 

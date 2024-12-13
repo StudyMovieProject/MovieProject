@@ -109,23 +109,63 @@
     </span>
     </p>
 
+    <!-- Quantity input outside the forms -->
+    <label for="quantity">수량:</label>
+    <input type="number" name="quantity" id="quantity" value="1" min="1" required>
+
     <div class="actions">
         <!-- 구매하기 버튼 -->
         <form th:action="@{/purchase}" method="post">
             <input type="hidden" name="itemCode" th:value="${item.itemCode}">
+            <input type="hidden" name="quantity" id="purchase-quantity" th:value="*{quantity}">
             <button type="submit" class="buy-now">구매하기</button>
         </form>
 
         <!-- 장바구니에 추가 버튼 -->
-        <form th:action="@{/cart/add}" method="post">
-            <input type="hidden" name="itemCode" th:value="${item.itemCode}">
-            <button type="submit" class="add-to-cart">장바구니에 추가</button>
-        </form>
+        <button type="button" class="add-to-cart" onclick="addToCart()">장바구니에 추가</button>
     </div>
 
 
+
 </div>
 </div>
+
+<script>
+    function addToCart() {
+    const itemCode = parseInt(document.querySelector("input[name='itemCode']").value, 10);
+    const quantity = parseInt(document.getElementById("quantity").value, 10);
+
+    if (isNaN(itemCode) || isNaN(quantity)) {
+        alert("유효한 값이 아닙니다.");
+        return;
+    }
+
+    const data = {
+        itemCode: itemCode,
+        quantity: quantity
+    };
+
+    fetch('http://localhost:8089/api/cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.code === 1) {
+            alert(data.msg);  // 성공 메시지
+            window.location.href = "/page/cart";
+        } else {
+            alert("장바구니에 추가 실패: " + data.msg);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+</script>
+
 <!-- Include Footer -->
 <div th:insert="~{fragments/footer}"></div>
 
