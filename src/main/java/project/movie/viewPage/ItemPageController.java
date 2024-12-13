@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
+import project.movie.store.domain.item.Item;
+import project.movie.store.service.ItemService;
 
 import java.util.List;
 import java.util.Map;
@@ -17,25 +19,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ItemPageController {
 
-    private final RestTemplate restTemplate;
+    private final ItemService itemService;
 
     @GetMapping("/items")
     public String getItems(Model model){
-        String apiUrl = "http://localhost:8089/api/items";
-
-        ResponseEntity<Map> response = restTemplate.getForEntity(apiUrl, Map.class);
-        List<Map<String, Object>> items = (List<Map<String, Object>>) response.getBody().get("data");
-
+        List<Item> items = itemService.itemFindAll();
         model.addAttribute("items",items);
         return "/store/items";
     }
 
     @GetMapping("/items/{id}")
     public String getItem(@PathVariable Integer id, Model model){
-        String apiUrl = "http://localhost:8089/api/items/" + id;
-
-        ResponseEntity<Map> response = restTemplate.getForEntity(apiUrl, Map.class);
-        Map<String, Object> item = (Map<String, Object>) response.getBody().get("data");
+        Item item = itemService.itemFindByItemCode(id);
 
         model.addAttribute("item",item);
         return "/store/item-detail";

@@ -22,6 +22,9 @@
             const tel = document.getElementById("tel").value;
             const role = "CUSTOMER"; // 기본 역할 설정
 
+            console.log(password);
+            console.log(username);
+
             const memberData = {
                 memberId: memberId,
                 password: password,
@@ -30,8 +33,8 @@
                 email: email,
                 tel: tel
             };
-
-            fetch('http://localhost:8089/api/members/join', {
+            //console.log(memberData);
+            fetch('http://localhost:8080/api/members/join', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,7 +63,7 @@
 <!-- Include Header -->
 <div th:insert="~{fragments/header}"></div>
 <div id="main-content" class="container">
-<form action="/" method="post">
+<form action="/" method="post" onsubmit="return false;">
     <div class="mb-3">
         <label for="memberId" class="form-label">아이디</label>
         <input type="text" class="form-control" id="memberId" placeholder="아이디를 입력해주세요">
