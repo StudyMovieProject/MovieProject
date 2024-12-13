@@ -20,7 +20,7 @@
         formData.append("username", username);
         formData.append("password", password);
 
-        fetch('http://localhost:8080/login', {
+        fetch('/login', {
             method: 'POST',
             body: formData
         })
