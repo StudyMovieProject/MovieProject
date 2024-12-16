@@ -84,11 +84,7 @@ public class IamPortClient {
                     IamportResponseDto.class
             );
 
-            // 첫 번째 응답이 code 1이 아닌 경우 대기
-//            if (response.getBody() != null && response.getBody().getCode() != 1) {
-//                return waitForResponseUntilSuccess(impUid, reason);
-//            }
-//            return response.getBody();
+
             // 응답 상태가 OK이고, body가 null이 아니면 처리
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 IamportResponseDto iamportResponseDto = response.getBody();
@@ -106,43 +102,6 @@ public class IamPortClient {
         } catch (Exception e) {
             throw new CustomApiException("결제 취소 요청 중 오류가 발생했습니다: " + e.getMessage());
         }
-    }
-
-
-    private IamportResponseDto waitForResponseUntilSuccess(String impUid, String reason) throws InterruptedException, Exception {
-        long startTime = System.currentTimeMillis();
-
-        while (System.currentTimeMillis() - startTime < TIMEOUT) {
-            // 일정 시간 대기 후 재시도
-            Thread.sleep(2000);  // 2초 대기 (조정 가능)
-
-            // 재시도 요청 보내기
-            String cancelUrl = BASE_URL + "payments/cancel";
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Content-Type", "application/json");
-            headers.set("Authorization", "Bearer " + getAccessToken());
-
-            Map<String, Object> cancelData = new HashMap<>();
-            cancelData.put("imp_uid", impUid);
-            cancelData.put("reason", reason);
-
-            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(cancelData, headers);
-
-            // 재시도 요청
-            ResponseEntity<IamportResponseDto> response = restTemplate.exchange(
-                    cancelUrl,
-                    HttpMethod.POST,
-                    requestEntity,
-                    IamportResponseDto.class
-            );
-
-            if (response.getBody() != null && response.getBody().getCode() == 0) {
-                return response.getBody();  // 성공적으로 취소 처리된 응답 반환
-            }
-        }
-
-        // 30초 대기 후 실패 처리
-        throw new CustomApiException("결제 취소 요청 중 오류가 발생했습니다: 30초 이내에 취소 완료되지 않았습니다.");
     }
 
 
@@ -169,7 +128,7 @@ public class IamPortClient {
                 TokenResponseDto.class
         );
 
-//        System.out.println("Access Token : " + tokenResponse.getBody().getResponse().getAccess_token());
+
         // Return the access token
         return tokenResponse.getBody().getResponse().getAccess_token();
     }

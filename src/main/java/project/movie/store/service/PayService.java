@@ -172,7 +172,6 @@ public class PayService {
                 throw new CustomApiException("결제 오류");
             }
         }catch (Exception e){
-            cancelPGResponse(dto.getImpUid(), "결제 중 오류로 인한 결제 취소");
             throw new CustomApiException("결제 중 오류로 인한 결제 취소");
         }
 
