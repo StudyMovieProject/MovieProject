@@ -28,6 +28,9 @@ public class Coupon {
     @JoinColumn(name="item_code", nullable = false)
     private Item item;
 
+    @Column(name="item_quantity", nullable = false)
+    private Integer itemQuantity;
+
     @Column(name="cp_id")
     private String cpId;
 

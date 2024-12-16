@@ -13,7 +13,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify([{ cartCode: 6 }])  // 예시 데이터로 설정한 cartCode
+                body: JSON.stringify([{ cartCode: 1 }])  // 예시 데이터로 설정한 cartCode
             })
             .then(response => response.json())
             .then(data => {
@@ -72,7 +72,7 @@
         // 여기까지
 
         function requestPayButtonClick() {
-            const amount = 10;  // 예시 금액
+            const amount = 100;  // 예시 금액
             createOrder(amount);
         }
     </script>

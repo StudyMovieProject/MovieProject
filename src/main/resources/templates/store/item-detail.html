@@ -114,10 +114,9 @@
     <input type="number" name="quantity" id="quantity" value="1" min="1" required>
 
     <div class="actions">
-        <!-- 구매하기 버튼 -->
-        <form th:action="@{/purchase}" method="post">
+        <form th:action="@{/page/pay/direct}" method="post">
             <input type="hidden" name="itemCode" th:value="${item.itemCode}">
-            <input type="hidden" name="quantity" id="purchase-quantity" th:value="*{quantity}">
+            <input type="hidden" name="purchase-quantity" id="purchase-quantity" value="1">
             <button type="submit" class="buy-now">구매하기</button>
         </form>
 
@@ -130,6 +129,13 @@
 </div>
 </div>
 
+<script>
+    // Update the hidden purchase-quantity field when the quantity input changes
+    document.querySelector("#quantity").addEventListener("input", function() {
+        const quantity = document.querySelector("#quantity").value;
+        document.querySelector("#purchase-quantity").value = quantity;
+    });
+</script>
 <script>
     function addToCart() {
     const itemCode = parseInt(document.querySelector("input[name='itemCode']").value, 10);

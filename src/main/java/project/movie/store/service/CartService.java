@@ -13,6 +13,7 @@ import project.movie.store.domain.cart.CartStatus;
 import project.movie.store.domain.item.Item;
 import project.movie.store.domain.pay.Pay;
 import project.movie.store.domain.pay.PayDetail;
+import project.movie.store.dto.cart.CartDeleteDto;
 import project.movie.store.dto.cart.CartItemRequestDto;
 import project.movie.store.dto.cart.CartRespDto;
 import project.movie.store.dto.cart.CartUpdateDto;
@@ -38,7 +39,7 @@ public class CartService {
 
         Item findItem = itemService.itemFindByItemCode(item.getItemCode());
         Cart cartItem = repository.findByItem_ItemCode(item.getItemCode());
-        if ( findItem.equals(cartItem)){
+        if ( cartItem != null && findItem.equals(cartItem.getItem())){
             cartItem.setCartQty(cartItem.getCartQty() + item.getQuantity());
         }else{
             Member findMember = memberService.getByMemberId(memberId);
@@ -79,7 +80,7 @@ public class CartService {
             deleteItem(uCart.getItemCode());
             return new ResponseDto<>(1, "장바구니에서 삭제되었습니다", uCart);
         }else{
-            Cart cart = findByCartCode(uCart.getCartCode());
+            Cart cart = findByCartCode(Integer.parseInt(uCart.getCartCode()));
             cart.setCartQty(uCart.getCartQty());
             cart.setCartDate(LocalDateTime.now());
             CartRespDto cartRespDto = convertToDto(cart);
@@ -90,11 +91,14 @@ public class CartService {
     @Transactional
     public void paidCart(Pay pay){
 
+        List<Cart> cartsToDelete = new ArrayList<>();
         for (PayDetail payDetail : pay.getPayDetails()) {
             Cart cart = repository.findByItem_ItemCode(payDetail.getItem().getItemCode());
-            repository.deleteById(cart.getCartCode());
+            if (cart != null) {
+                cartsToDelete.add(cart);
+            }
         }
-
+        repository.deleteAll(cartsToDelete);
     }
 
     public List<CartRespDto> convertToDtos(List<Cart> carts){
@@ -107,4 +111,8 @@ public class CartService {
         return CartRespDto.from(cart);
     }
 
+    @Transactional
+    public void  deleteCart(CartDeleteDto dto){
+        repository.deleteByCartCode(dto.getCartCode());
+    }
 }

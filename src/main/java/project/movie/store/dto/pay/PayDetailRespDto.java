@@ -2,9 +2,11 @@ package project.movie.store.dto.pay;
 
 
 import lombok.Builder;
+import lombok.Getter;
 import project.movie.store.domain.pay.PayDetail;
 
 
+@Getter
 @Builder
 public class PayDetailRespDto {
     private Integer itemCode;

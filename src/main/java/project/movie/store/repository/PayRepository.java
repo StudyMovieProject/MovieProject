@@ -7,5 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PayRepository extends JpaRepository<Pay,String> {
-    Optional<List<Pay>> findByMember_memberId(String memberId);
+    List<Pay> findByMember_memberId(String memberId);
+    Optional<Pay> findByPayCode(String payCode);
 }

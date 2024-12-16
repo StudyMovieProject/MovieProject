@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IamportResponseDto {
-    private String code;
+    private Integer code;
+    private String message;
     private PaymentResponseDto response;
 }

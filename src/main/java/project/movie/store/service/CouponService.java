@@ -36,8 +36,7 @@ public class CouponService {
             coupon.setMemberId(pay.getMember().getMemberId());
             coupon.setCpStatus(CouponStatus.AVAILABLE);
             coupon.setItem(payDetail.getItem());
-
-
+            coupon.setItemQuantity(payDetail.getCartQty());
             couponRepository.save(coupon);
         }
 
@@ -79,6 +78,16 @@ public class CouponService {
                 .orElseThrow(() -> new CustomApiException("존재하지 않는 쿠폰입니다."));
 
         couponRepository.delete(coupon);
+    }
+
+    public boolean cancelBeforePayCheckCoupon(String payCode){
+        List<Coupon> coupons = couponRepository.findByPay_payCode(payCode);
+        for (Coupon coupon : coupons) {
+            if(coupon.getCpStatus().equals(CouponStatus.USED)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public void cancelPayAndCoupon(String payCode){

@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import project.movie.auth.handler.LogoutSuccessHandler;
+import project.movie.auth.jwt.filter.CustomAuthenticationEntryPoint;
 import project.movie.auth.jwt.filter.JwtAuthenticationFilter;
 import project.movie.auth.jwt.filter.JwtAuthorizationFilter;
 import project.movie.auth.jwt.filter.JwtOAuthAuthorizationFilter;
@@ -68,10 +69,15 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/logout", "/api/members/join", "/guest-login", "/api/items/**", "/naver/login", "/naver/callback", "/page/**").permitAll()
+                        .requestMatchers("/", "/login", "/logout", "/api/members/join", "/guest-login", "/api/items/**", "/naver/login", "/naver/callback").permitAll()
+                        .requestMatchers("/page/items/**", "/page/join/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
-                        .anyRequest().authenticated());
+                        .requestMatchers("/page/pay/**", "/page/cart/**", "/page/coupons/**").authenticated()
+                        .anyRequest().authenticated())
+                .exceptionHandling((exceptions) -> exceptions
+                                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+
 
 
         http

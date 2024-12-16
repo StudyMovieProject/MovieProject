@@ -1,12 +1,14 @@
 package project.movie.store.dto.pay;
 
 import lombok.Builder;
+import lombok.Getter;
 import project.movie.store.domain.pay.Pay;
 import project.movie.store.domain.pay.PayDetail;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 @Builder
 public class PayRespDto {
     private String payCode;

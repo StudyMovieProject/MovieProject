@@ -16,10 +16,12 @@ import project.movie.store.dto.cart.CartPurchaseDto;
 import project.movie.store.dto.cart.CartRespDto;
 import project.movie.store.dto.cart.PurchaseByOneDto;
 import project.movie.store.dto.pay.PayRespDto;
+import project.movie.store.service.CouponService;
 import project.movie.store.service.PayService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -28,6 +30,7 @@ import java.util.List;
 public class PayController {
 
     private final PayService payService;
+    private final CouponService couponService;
 
     //결제 구매하기 전 결제 구매 생성 (장바구니 구매)
     @PostMapping("/cart/purchase/create")
@@ -66,8 +69,16 @@ public class PayController {
     }
 
     @PutMapping("/cancel/{payCode}")
-    public ResponseEntity<?> cancelPayment(@PathVariable String payCode){
-        return new ResponseEntity<>(payService.cancelPayment(payCode),HttpStatus.OK);
+    public ResponseEntity<?> cancelPayment(@PathVariable("payCode") String payCode, @AuthenticationPrincipal UserDetails userDetails){
+        List<Pay> pays = payService.getPayInfoAllByMember(userDetails.getUsername());
+
+        for (Pay pay : pays) {
+            if (Objects.equals(pay.getPayCode(), payCode) && couponService.cancelBeforePayCheckCoupon(pay.getPayCode())){
+                return new ResponseEntity<>(payService.cancelPayment(payCode),HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<>(new ResponseDto<>(-1, "결제코드가 존재하지 않거나, 이미 사용한 쿠폰이 존재합니다.", null), HttpStatus.OK);
     }
 
 

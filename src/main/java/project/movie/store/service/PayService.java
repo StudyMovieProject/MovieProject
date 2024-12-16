@@ -24,6 +24,7 @@ import project.movie.store.dto.PG.PaymentRequestDto;
 import project.movie.store.dto.cart.CartPurchaseDto;
 import project.movie.store.dto.cart.PurchaseByOneDto;
 import project.movie.store.dto.pay.PayRespDto;
+import project.movie.store.repository.PayDetailRepository;
 import project.movie.store.repository.PayRepository;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,7 @@ public class PayService {
 
 
     private final PayRepository payRepository;
+    private final PayDetailRepository payDetailRepository;
     private final MemberService memberService;
     private final CouponService couponService;
     private final IamPortClient iamPortClient;
@@ -53,10 +55,13 @@ public class PayService {
 
         Pay pay = new Pay();
         pay.generatePayCode();
+        //카드 고정
+        pay.setPayType("card");
         pay.setMember(findMember);
         pay.setPayDate(LocalDateTime.now());
         pay.setPayStatus(PayStatus.CART_CREATE);
-
+        pay.setPayPrice(0);
+        payRepository.save(pay);
 
         for( CartPurchaseDto cartPurchaseDto : cartPurchaseDtos){
             Cart findCart =  cartService.findByCartCode(cartPurchaseDto.getCartCode());
@@ -64,11 +69,12 @@ public class PayService {
             payDetail.setPay(pay);
             payDetail.setItem(findCart.getItem());
             payDetail.setCartQty(findCart.getCartQty());
+            payDetailRepository.save(payDetail);
             totalPrice += ((findCart.getItem().getPrice() - findCart.getItem().getSalePrice()) * findCart.getCartQty());
         }
 
         pay.setPayPrice(totalPrice);
-
+        payRepository.save(pay);
 
         PaymentRequestDto paymentRequestDto = new PaymentRequestDto();
         paymentRequestDto.setPayCode(pay.getPayCode());
@@ -88,20 +94,23 @@ public class PayService {
         Pay pay = new Pay();
         pay.generatePayCode();
         pay.setMember(findMember);
+        pay.setPayType("card");
         pay.setPayDate(LocalDateTime.now());
         pay.setPayStatus(PayStatus.DIRECT_CREATE);
-
+        pay.setPayPrice(0);
+        payRepository.save(pay);
 
         Item findItem =  itemService.itemFindByItemCode(purchaseByOneDto.getItemCode());
         PayDetail payDetail = new PayDetail();
         payDetail.setPay(pay);
         payDetail.setItem(findItem);
         payDetail.setCartQty(purchaseByOneDto.getItemQty());
+        payDetailRepository.save(payDetail);
         totalPrice += ((findItem.getPrice() - findItem.getSalePrice()) * purchaseByOneDto.getItemQty());
 
 
         pay.setPayPrice(totalPrice);
-
+        payRepository.save(pay);
 
         PaymentRequestDto paymentRequestDto = new PaymentRequestDto();
         paymentRequestDto.setPayCode(pay.getPayCode());
@@ -114,29 +123,62 @@ public class PayService {
     }
 
 
+    @Transactional
     public IamportResponseDto verifyResponse(PaymentCompleteDto dto){
-        IamportResponseDto response = iamPortClient.paymentByImpUid(dto.getImpUid());
 
-        if("paid".equals(response.getResponse().getStatus())){
-            Pay findPay = getFindByPayCode(response.getResponse().getPayCode());
-            if(response.getResponse().getPayPrice().equals(findPay.getPayPrice())){
+        try{
+            IamportResponseDto response = iamPortClient.paymentByImpUid(dto.getImpUid());
 
-                if (findPay.getPayStatus().equals(PayStatus.CART_CREATE)){
+            if (response == null || response.getResponse() == null) {
+                throw new CustomApiException("결제 정보가 유효하지 않습니다.");
+            }
+
+            // Print status for debugging
+            System.out.println(response.getResponse().getStatus());
+
+
+
+            if("paid".equals(response.getResponse().getStatus())){
+
+                Pay findPay = getFindByPayCode(response.getResponse().getMerchant_uid());
+
+
+                if (findPay == null) {
+                    throw new CustomApiException("결제 정보를 찾을 수 없습니다.");
+                }
+
+                // Check for price mismatch
+                if (findPay.getPayPrice() != null && !findPay.getPayPrice().equals(response.getResponse().getAmount())) {
+                    cancelPGResponse(dto.getImpUid(),  "결제 금액 불일치로 인한 취소");
+                    throw new CustomApiException("결제 금액 오류");
+                }
+
+                // Process cart if status is "CART_CREATE"
+                if (findPay.getPayStatus().equals(PayStatus.CART_CREATE)) {
                     cartService.paidCart(findPay);
                 }
+
+                // Update payment status
                 findPay.setPayStatus(PayStatus.PAID);
                 findPay.setImpCode(dto.getImpUid());
+
+                payRepository.save(findPay);
+
+                // Save coupon
                 couponService.couponSave(findPay);
+
                 return response;
             }else{
-                cancelPGResponse(dto.getImpUid(), "결제 금액 불일치로 인한 취소");
-                throw new CustomApiException("결제 금액 오류");
+                throw new CustomApiException("결제 오류");
             }
-        }else{
-            throw new CustomApiException("결제 오류");
+        }catch (Exception e){
+            cancelPGResponse(dto.getImpUid(), "결제 중 오류로 인한 결제 취소");
+            throw new CustomApiException("결제 중 오류로 인한 결제 취소");
         }
 
+
     }
+
 
     private void cancelPGResponse(String impUid, String reason){
         try{
@@ -150,20 +192,28 @@ public class PayService {
         }
     }
 
-
+    @Transactional
     public List<Pay> getPayInfoAllByMember(String memberId){
-        return payRepository.findByMember_memberId(memberId)
-                .orElseThrow(() -> new CustomApiException("해당 회원이 존재하지 않습니다."));
+        List<Pay> payList = payRepository.findByMember_memberId(memberId);
+        // 예외를 던지는 경우
+//        if (payList.isEmpty()) {
+//            throw new CustomApiException("결제 내역이 존재하지 않습니다.");
+//        }
+        return payList;
     }
 
 
     //결제정보 조회
-    public PayRespDto getPayInfo(String payCode){
-        Pay pay = payRepository.findById(payCode)
-                .orElseThrow(() -> new CustomApiException("결제코드가 존재하지 않습니다"));
+    public PayRespDto  getPayInfo(String payCode){
+
+        Pay pay = payRepository.findByPayCode(payCode)
+                .orElseThrow(() -> new CustomApiException("결제코드가 존재하지 않습니다")
+                );
 
         return PayRespDto.from(pay);
     }
+
+
 
     public List<PayRespDto> convertToDtos(List<Pay> pays){
         List<PayRespDto> payRespDtos = new ArrayList<>();
@@ -186,7 +236,8 @@ public class PayService {
                 cancelPGResponse(pay.getImpCode(), "결제 취소 요청");
 
                 couponService.cancelPayAndCoupon(pay.getPayCode());
-                deletePayment(pay.getPayCode());
+                pay.setPayStatus(PayStatus.CANCEL);
+                payRepository.save(pay);
                 return new ResponseDto<>(1,"취소 성공", null);
             }
             PayRespDto dto = PayRespDto.from(pay);

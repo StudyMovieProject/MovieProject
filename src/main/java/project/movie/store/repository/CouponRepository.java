@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface CouponRepository extends JpaRepository<Coupon, String> {
+public interface CouponRepository extends JpaRepository<Coupon, Integer> {
     List<Coupon> findByMemberId(String memberId);
     Optional<Coupon> findByCpId(String cpId);
     List<Coupon> findByPay_payCode(String payCode);

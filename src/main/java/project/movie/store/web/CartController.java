@@ -43,4 +43,9 @@ public class CartController {
        return new ResponseEntity<>(cartService.updateCart(updateDto), HttpStatus.OK);
     }
 
+    @DeleteMapping
+    public ResponseEntity<?> deleteCartItem(@RequestBody CartDeleteDto deleteDto){
+        cartService.deleteCart(deleteDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "장바구니에서 삭제되었습니다",null), HttpStatus.OK);
+    }
 }

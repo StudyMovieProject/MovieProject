@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaymentResponseDto {
+    private String merchant_uid; //payCode
+    private String imp_uid;
     private String status;
-    private Integer payPrice;
-    private String impUid;
-    private String payCode;
+    private int amount; // price
 }

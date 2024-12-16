@@ -92,7 +92,7 @@
     </div>
 </div>
 
-<button id="paymentButton" onclick="startPaymentProcess()">결제하기</button>
+<button id="paymentButton" onclick="startPaymentProcess()" class="btn btn-primary">결제하기</button>
 
 <!-- Include Footer -->
 <div th:insert="~{fragments/footer}"></div>
@@ -156,8 +156,9 @@
         .then(data => {
             if (data.code === 1) {
                 alert('결제가 성공적으로 완료되었습니다!');
+                window.location.href = '/page/pay';
             } else {
-                alert('결제 검증 실패!');
+                alert('결제 검증 실패로 인한 결제 불가!');
             }
         })
         .catch(error => {

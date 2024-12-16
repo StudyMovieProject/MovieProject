@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 public class CartUpdateDto {
     private Integer itemCode;
-    private Integer cartCode;
+    private String cartCode;
     private Integer cartQty;
     private Integer cartStatus;
     private LocalDateTime cartDate;

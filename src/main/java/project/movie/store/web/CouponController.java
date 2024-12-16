@@ -40,8 +40,10 @@ public class CouponController {
     //쿠폰 사용
     @PutMapping("/{couponId}/use")
     public ResponseEntity<?> useCoupon(@PathVariable String couponId){
+        System.out.println(couponId);
         CouponRespDto couponRespDto = couponService.useCoupon(couponId);
-        return new ResponseEntity<>(new ResponseDto<>(1, "쿠폰 사용 완료", couponRespDto), HttpStatus.OK);
+//        return new ResponseEntity<>(new ResponseDto<>(1, "쿠폰 사용 완료", couponRespDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "쿠폰 사용 완료", null), HttpStatus.OK);
     }
 
     //쿠폰삭제
