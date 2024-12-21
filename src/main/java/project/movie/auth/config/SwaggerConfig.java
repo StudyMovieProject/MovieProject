@@ -1,21 +1,29 @@
 package project.movie.auth.config;
 
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 
 @Configuration
 public class SwaggerConfig {
-
-//    springdoc-openapi-starter-webmvc-ui 사용하는 경우 아래 라이브러리 빌드 할 필요 없어 주석 처리
-//    @Bean
-//    public Dockek api(){
-//        return new Docket(DocumentationType.OAS_30)
-//                .apiInfo(apiInfo())
-//                .select()
-//                .apis(RequestHandlerSelectors.any())
-//                .paths(PathSelectors.any())
-//                .build();
-//    }
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("API Documentation")
+                        .version("1.0")
+                        .description("API Documentation for the application"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(new Components()
+                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")));
+    }
 //
 //    private ApiInfo apiInfo(){
 //        return new ApiInfoBuilder()
