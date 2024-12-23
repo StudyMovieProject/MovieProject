@@ -23,7 +23,7 @@ public class BoardRespDto {
     private String stored_filename; // 파일 이름
     private String original_filename; // 파일 이름
     private String filepath; // 파일 이름
-    private String formattedDate;
+
     public BoardRespDto(Board board) {
 
         this.seq = board.getSeq();
@@ -37,13 +37,7 @@ public class BoardRespDto {
         this.original_filename = board.getOriginal_filename();
         this.filepath = board.getFilepath();
     }
-    public String getFormattedDate() {
-        return formattedDate;
-    }
 
-    public void setFormattedDate(String formattedDate) {
-        this.formattedDate = formattedDate;
-    }
 
 
 }

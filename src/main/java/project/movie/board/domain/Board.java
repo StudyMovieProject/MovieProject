@@ -41,7 +41,7 @@ public class Board {
     @Schema(description = "내용", required = true, example = "00개봉일 언제인가요")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="member_id")
     @Schema(description = "유저 아이디", required = true, example = "jungin2")
     private Member member;
