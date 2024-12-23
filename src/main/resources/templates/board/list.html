@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객센터</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+        #main-content {
+            flex: 1;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .tab-menu {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .tab-menu div {
+            margin-right: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+        .tab-menu div.active {
+            border-color: #ddd;
+            font-weight: bold;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .content table th,
+        .content table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .content .button {
+            text-align: right;
+            margin-top: 10px;
+        }
+        .content .button button {
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .content .button button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+    $(document).ready(function() {
+        let message = "[[${msg}]]";
+        if (message != "") {
+            alert(message);
+            location.href="/";
+        }
+    });
+</script>
+<body>
+<div class="wrapper">
+    <div th:insert="~{fragments/header}"></div>
+    <div id="main-content" class="container">
+        <h1>고객센터</h1>
+        <div class="tab-menu">
+            <div>공지사항</div>
+            <div>자주찾는질문</div>
+            <div class="active">1:1문의</div>
+            <div>제휴대관문의</div>
+        </div>
+        <div class="content">
+            <div class="button">
+                <a href="/page/write"><button>1:1 문의 등록</button></a>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>문의유형</th>
+                    <th>영화관</th>
+                    <th>제목</th>
+                    <th>등록일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${posts}">
+                    <td th:switch="${post.cate}">
+                        <span th:case="0">영화문의</span>
+                        <span th:case="1">문의</span>
+                        <span th:case="2">건의</span>
+                        <span th:case="3">칭찬</span>
+                        <span th:case="4">불만</span>
+                        <span th:case="5">기타</span>
+                    </td>
+                    <td th:text="${post.theater}"></td>
+                    <td>
+                        <a th:href="@{/page/detail/{id}(id=${post.seq})}" th:text="${post.title}"></a>
+                    </td>
+                    <td th:text="${#temporals.format(post.reg_date, 'yyyy-MM-dd')}"></td>                </tr>
+                <tr th:if="${posts==null}">
+                    <td colspan="5" style="text-align: center;">등록된 문의가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div th:insert="~{fragments/footer}"></div>
+</div>
+</body>
+</html>

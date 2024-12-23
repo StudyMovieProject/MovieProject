@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상세 글 조회</title>
+    <style>
+        html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+/* 메인 콘텐츠 영역 */
+.container {
+    flex: 1; /* 나머지 공간을 모두 차지하게 함 */
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+        /* 글 내용 스타일 */
+        .post-info p {
+            margin: 10px 0;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .post-info span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* 버튼 그룹 스타일 */
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-cancel {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d32f2f;
+        }
+
+        /* 헤더와 푸터 스타일 */
+        .header, .footer {
+            text-align: center;
+            padding: 10px;
+            background: #444;
+            color: #fff;
+        }
+
+/* 푸터를 맨 아래 고정 */
+.footer {
+    text-align: center;
+    padding: 10px;
+    background: #444;
+    color: #fff;
+    font-size: 0.9rem;
+}
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div th:insert="~{fragments/header}" class="header"></div>
+
+<!-- Main Content -->
+<div class="container">
+    <h1 th:text="${post.title}">게시글 제목</h1>
+
+    <div class="post-info">
+        <p>작성자: <span th:text="${post.memberId}">작성자명</span></p>
+        <p>등록일: <span th:text="${#temporals.format(post.reg_date, 'yyyy-MM-dd')}">2024-01-01</span></p>
+        <p>극장: <span th:text="${post.theater}">극장명</span></p>
+        <p>문의유형:
+            <span th:switch="${post.cate}">
+                    <span th:case="0">영화문의</span>
+                    <span th:case="1">문의</span>
+                    <span th:case="2">건의</span>
+                    <span th:case="3">칭찬</span>
+                    <span th:case="4">불만</span>
+                    <span th:case="5">기타</span>
+                </span>
+        </p>
+        <p>내용:</p>
+        <p th:text="${post.content}" style="white-space: pre-wrap;">글 내용이 여기에 표시됩니다.</p>
+        <div th:if="${post.stored_filename}">
+            <p>첨부파일: <a th:href="@{/files/{filename}(filename=${post.stored_filename})}" th:text="${post.original_filename}">첨부파일명</a></p>
+        </div>
+    </div>
+
+    <!-- 버튼 그룹 -->
+    <div class="button-group">
+        <a href="/page/list" class="btn-cancel">목록으로 돌아가기</a>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:insert="~{fragments/footer}" class="footer"></div>
+</body>
+</html>

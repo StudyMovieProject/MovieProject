@@ -15,6 +15,8 @@ import project.movie.member.service.MemberService;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +71,7 @@ public class BoardService {
         UUID uuid = UUID.randomUUID(); // 랜덤으로 식별자를 생성
 
         String fileName = uuid + "_" + file.getOriginalFilename(); // UUID와 파일이름을 포함된 파일 이름으로 저장
-
+        URLDecoder.decode(fileName, StandardCharsets.UTF_8);
         File saveFile = new File(projectPath, fileName); // projectPath는 위에서 작성한 경로, name은 전달받을 이름
 
         file.transferTo(saveFile);

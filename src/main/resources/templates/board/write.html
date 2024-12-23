@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 문의</title>
+    <style>
+        /* 공통 설정 */
+        * {
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* 공통 컨테이너 스타일 */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        h1, h3 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        /* 버튼 스타일 */
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-confirm { background-color: #4CAF50; }
+        .btn-confirm:hover { background-color: #45a049; }
+        .btn-cancel { background-color: #f44336; }
+        .btn-cancel:hover { background-color: #d32f2f; }
+
+        /* preview 스타일을 writeForm과 동일하게 설정 */
+        #writeForm, #preview {
+            display: none;
+        }
+        #writeForm.active, #preview.active {
+            display: block;
+        }
+                /* 푸터 고정 스타일 */
+        .footer {
+            margin-top: auto;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="~{fragments/header}" class="header"></div>
+
+<!-- 작성 영역 -->
+<div id="writeForm" class="container active">
+    <h1>고객센터</h1>
+    <form onsubmit="return false;">
+        <table>
+            <tr>
+                <th>문의유형</th>
+                <td>
+                    <label><input type="radio" name="inquiryType" value="0" checked> 문의</label>
+                    <label><input type="radio" name="inquiryType" value="1"> 건의</label>
+                    <label><input type="radio" name="inquiryType" value="2"> 칭찬</label>
+                    <label><input type="radio" name="inquiryType" value="3"> 불만</label>
+                    <label><input type="radio" name="inquiryType" value="4"> 기타</label>
+                </td>
+            </tr>
+            <tr>
+                <th>영화관</th>
+                <td>
+                    <select name="theater">
+                        <option value="">영화관 선택</option>
+                        <option value="신도림">신도림</option>
+                        <option value="동탄">동탄</option>
+                        <option value="천안불당">천안불당</option>
+                        <option value="경주보문">경주보문</option>
+                        <option value="구미봉곡">구미봉곡</option>
+                        <option value="남양주다산">남양주다산</option>
+                        <option value="청라">청라</option>
+                        <option value="보은">보은</option>
+                        <option value="영덕예주">영덕예주</option>
+                        <option value="칠곡호이">칠곡호이</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>제목</th>
+                <td><input type="text" id="title" placeholder="제목을 입력하세요." required></td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td><textarea id="content" placeholder="내용을 입력하세요." required></textarea></td>
+            </tr>
+            <tr>
+                <th>첨부파일</th>
+                <td><input type="file" id="file"></td>
+            </tr>
+        </table>
+        <div class="button-group">
+            <button class="btn btn-confirm" onclick="handleConfirm()">확인</button>
+            <button type="button" class="btn btn-cancel" onclick="location.href='/page/list'">취소</button>
+        </div>
+    </form>
+</div>
+
+<!-- 미리 보기 영역 -->
+<div id="preview" class="container">
+    <h3>입력한 내용 미리 보기</h3>
+    <table>
+        <tr>
+            <th>문의유형</th>
+            <td id="previewType"></td>
+        </tr>
+        <tr>
+            <th>영화관</th>
+            <td id="previewTheater"></td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td id="previewTitle"></td>
+        </tr>
+        <tr>
+            <th>내용</th>
+            <td id="previewContent"></td>
+        </tr>
+        <tr>
+            <th>첨부파일</th>
+            <td id="previewFile"></td>
+        </tr>
+    </table>
+    <div class="button-group">
+        <button type="button" class="btn btn-confirm" onclick="submitForm()">확인</button>
+        <button type="button" class="btn btn-cancel" onclick="handleCancel()">수정</button>
+    </div>
+</div>
+
+<script>
+    let isPreviewMode = false;
+
+    function handleConfirm() {
+        const type = document.querySelector('input[name="inquiryType"]:checked').value;
+        const theater = document.querySelector('select[name="theater"]').value;
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const fileInput = document.getElementById('file');
+        const file = fileInput.files[0];
+
+        if (!title.trim() || !content.trim()) {
+            alert("제목과 내용을 입력해 주세요.");
+            return;
+        }
+
+        // 미리 보기 영역 데이터 업데이트
+        document.getElementById('previewType').innerText = type;
+        document.getElementById('previewTheater').innerText = theater;
+        document.getElementById('previewTitle').innerText = title;
+        document.getElementById('previewContent').innerText = content;
+        document.getElementById('previewFile').innerText = file ? file.name : '첨부파일 없음';
+
+        // 화면 전환
+        document.getElementById('writeForm').classList.remove('active');
+        document.getElementById('preview').classList.add('active');
+    }
+
+    function handleCancel() {
+        // 화면 전환
+        document.getElementById('preview').classList.remove('active');
+        document.getElementById('writeForm').classList.add('active');
+    }
+
+    function submitForm() {
+        const type = document.querySelector('input[name="inquiryType"]:checked').value;
+        const theater = document.querySelector('select[name="theater"]').value;
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const fileInput = document.getElementById('file');
+        const file = encodeURIComponent(fileInput.files[0]);
+
+        const formData = new FormData();
+        formData.append('cate', type);
+        formData.append('theater', theater);
+        formData.append('title', title);
+        formData.append('content', content);
+
+        if (file) {
+            formData.append('file', file);
+            fetch('/api/board/writeFile', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("내용이 저장되었습니다.");
+                location.href = '/page/list';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("저장 중 오류가 발생했습니다.");
+            });
+        } else {
+            fetch('/api/board/write', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cate: type,
+                    theater: theater,
+                    title: title,
+                    content: content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("내용이 저장되었습니다.");
+                location.href = '/page/list';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("저장 중 오류가 발생했습니다.");
+            });
+        }
+
+    }
+</script>
+</body>
+<div th:insert="~{fragments/footer}" class="footer"></div>
+</html>
